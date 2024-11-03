@@ -1,80 +1,53 @@
-<<<<<<< HEAD
-# Parts-Manager
-a Parts Manager based on Nuxt3
-=======
-# Nuxt Minimal Starter
+## Änderungen pushen
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Um Änderungen an das Repository zu pushen, folge diesen Schritten:
 
-## Setup
+1. **Navigiere zu deinem Projektverzeichnis**:
 
-Make sure to install dependencies:
+   ```bash
+   cd /pfad/zu/deinem/projekt
+   ```
 
-```bash
-# npm
-npm install
+2. **Überprüfe den aktuellen Status**:
 
-# pnpm
-pnpm install
+   ```bash
+   git status
+   ```
 
-# yarn
-yarn install
+3. **Füge alle Änderungen hinzu**:
 
-# bun
-bun install
-```
+   ```bash
+   git add .
+   ```
 
-## Development Server
+4. **Commit deine Änderungen**:
 
-Start the development server on `http://localhost:3000`:
+   ```bash
+   git commit -m "Beschreibung der Änderungen"
+   ```
 
-```bash
-# npm
-npm run dev
+5. **Hole die neuesten Änderungen vom Remote-Repository**:
 
-# pnpm
-pnpm dev
+   ```bash
+   git fetch origin
+   ```
 
-# yarn
-yarn dev
+6. **Rebase deine Änderungen auf die `main`-Branch**:
 
-# bun
-bun run dev
-```
+   ```bash
+   git rebase origin/main
+   ```
 
-## Production
+   - Löse eventuelle Konflikte und fahre mit dem Rebase fort:
 
-Build the application for production:
+     ```bash
+     git add .
+     git rebase --continue
+     ```
 
-```bash
-# npm
-npm run build
+7. **Pushe die Änderungen zur `main`-Branch**:
 
-# pnpm
-pnpm build
+   ```bash
+   git push origin main
+   ```
 
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
->>>>>>> 6819f45 (first commit)
