@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       menuOpen: false,
-      avatarUrl: 'https://via.placeholder.com/150', // UserBild
+      avatarUrl: 'https://loremflickr.com/150/150', // UserBild
       username: 'John Doe', // wird später über Datenbank bezogen
       userRole: 'Admin', // wird später über Datenbank bezogen
       branch: '0525' // wird später über Datenbank bezogen

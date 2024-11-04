@@ -10,7 +10,13 @@
           <!-- Parts in Stock -->
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Parts in Stock</h3>
-            <p class="text-gray-700">Es sind {{ parts.length }} Parts im Lager</p>
+            <p class="text-gray-700">Es sind {{ totalParts }} Teile im Lager</p>
+          </div>
+
+          <!-- Total Selling Price -->
+          <div class="bg-white p-6 rounded shadow-md">
+            <h3 class="text-lg font-bold mb-2">Total Selling Price</h3>
+            <p class="text-gray-700">Gesamtverkaufspreis: {{ totalSellingPrice }} €</p>
           </div>
 
           <!-- Recent Orders -->
@@ -36,7 +42,6 @@
             <p class="text-gray-700">Mechanic Meters is now active</p>
             <p class="text-gray-700">Mechanic Feters is now active</p>
             <p class="text-gray-700">Mechanic Keters is now active</p>
-
           </div>
 
           <!-- Sales Overview -->
@@ -74,15 +79,41 @@ export default {
       ]
     };
   },
+  computed: {
+    totalParts() {
+      return this.parts.length;
+    },
+    totalSellingPrice() {
+      return this.parts.reduce((sum, part) => sum + (part.selling_price_eur || 0), 0).toFixed(2);
+    }
+  },
   mounted() {
-    this.fetchParts();
+    this.fetchAllParts();
   },
   methods: {
-    async fetchParts() {
+    async fetchAllParts() {
       try {
-        const response = await fetch('http://localhost:1337/parts');
-        const data = await response.json();
-        this.parts = data;
+        let allParts = [];
+        let page = 1;
+        const pageSize = 100;
+
+        while (true) {
+          const response = await fetch(`http://localhost:1337/items?_start=${(page - 1) * pageSize}&_limit=${pageSize}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          allParts = allParts.concat(data);
+
+          if (data.length < pageSize) {
+            break; // Exit loop if fewer items than pageSize are returned
+          }
+
+          page++;
+        }
+
+        this.parts = allParts;
+        console.log('Total parts fetched:', allParts.length);
       } catch (error) {
         console.error('Error fetching parts:', error);
       }

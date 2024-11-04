@@ -13,39 +13,50 @@
         <h4 class="text-md font-semibold mb-2">Filter nach Kategorie</h4>
         <div class="mb-4">
           <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="Aufbau" class="mr-2" />
+            <input type="checkbox" v-model="selectedCategories" value="1" class="mr-2" />
             Aufbau
           </label>
           <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="Rahmen" class="mr-2" />
+            <input type="checkbox" v-model="selectedCategories" value="2" class="mr-2" />
             Rahmen
           </label>
           <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="Elektrik" class="mr-2" />
+            <input type="checkbox" v-model="selectedCategories" value="3" class="mr-2" />
             Elektrik
           </label>
           <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="Motor" class="mr-2" />
+            <input type="checkbox" v-model="selectedCategories" value="4" class="mr-2" />
             Motor
           </label>
           <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="Betriebsstoffe" class="mr-2" />
+            <input type="checkbox" v-model="selectedCategories" value="5" class="mr-2" />
+            Bremse
+          </label>
+          <label class="block text-gray-700">
+            <input type="checkbox" v-model="selectedCategories" value="6" class="mr-2" />
+            Achse
+          </label>
+          <label class="block text-gray-700">
+            <input type="checkbox" v-model="selectedCategories" value="7" class="mr-2" />
             Betriebsstoffe
           </label>
           <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="Schrauben" class="mr-2" />
+            <input type="checkbox" v-model="selectedCategories" value="8" class="mr-2" />
             Schrauben
           </label>
+          <label class="block text-gray-700">
+            <input type="checkbox" v-model="selectedCategories" value="9" class="mr-2" />
+            Ladeboardwand
+          </label>
         </div>
-        
-        <h4 class="text-md font-semibold mb-2">Kategorie</h4>
-        <select class="w-full p-2 mb-4 border rounded" v-model="selectedCategory">
-          <option value="">Alle Kategorien</option>
-          <option value="Kategorie A">Kategorie A</option>
-          <option value="Kategorie B">Kategorie B</option>
-          <option value="Kategorie C">Kategorie C</option>
-        </select>
-        <button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200">Anwenden</button>
+        <div class="flex justify-between">
+          <button 
+            @click="clearFilters"
+            class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-red-800 transition duration-200"
+          >
+          Filter entfernen
+          </button>
+        </div>
       </aside>
 
       <!-- Parts List -->
@@ -74,8 +85,8 @@
                 <td class="px-4 py-2">{{ part.partnumber }}</td>
                 <td class="px-4 py-2">{{ part.description }}</td>
                 <td class="px-4 py-2">{{ part.instock }}</td>
-                <td class="px-4 py-2">{{ part.buying_price_eur }}</td>
-                <td class="px-4 py-2">{{ part.selling_price_eur }}</td>
+                <td class="px-4 py-2">{{ part.buying_price_eur }}-€</td>
+                <td class="px-4 py-2">{{ part.selling_price_eur }}€</td>
               </tr>
             </tbody>
           </table>
@@ -129,10 +140,14 @@ export default {
   },
   computed: {
     filteredParts() {
-      return this.parts.filter(part => 
-        part.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        part.partnumber.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      console.log('Selected Categories:', this.selectedCategories);
+      return this.parts.filter(part => {
+        const matchesSearchQuery = part.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                   part.partnumber.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchesCategory = this.selectedCategories.length === 0 || 
+                                (part.category !== null && this.selectedCategories.includes(part.category.toString()));
+        return matchesSearchQuery && matchesCategory;
+      });
     },
     sortedFilteredParts() {
       return this.filteredParts.sort((a, b) => a.id - b.id);
@@ -181,7 +196,16 @@ export default {
     },
     viewPart(id) {
       // Implement the logic to view part details
-    }
+    },
+    applyFilter() {
+      // This method can be used to trigger any additional logic if needed
+      console.log('Filter applied:', this.selectedCategories);
+    },
+    clearFilters() {
+      this.selectedCategories = [];
+      this.searchQuery = '';
+      console.log('Filters cleared');
+    },
   }
 };
 </script>
