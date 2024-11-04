@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gradient-to-r from-blue-500 to-purple-600">
+  <div class="min-h-screen flex flex-col bg-gradient-to-r from-gray-500 to-gray-700">
     <!-- Main Content -->
     <div class="flex-1 flex items-center justify-center">
       <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -27,10 +27,16 @@
           </div>
           <button
             type="submit"
-            class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
+            class="w-1/2 bg-gray-700 text-white py-2 rounded hover:bg-green-600 transition duration-200"
           >
             Login
           </button>
+          <!--
+          <button
+          type="request"
+          class="w-1/2 bg-gray-700 text-white py-2 rounded hover:bg-green-600 transition duration-200"
+          >Benutzer Anfordern</button>
+          -->
         </form>
       </div>
     </div>

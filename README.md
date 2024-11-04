@@ -24,7 +24,10 @@ Um Änderungen an das Repository zu pushen, folge diesen Schritten:
 
    ```bash
    git commit -m "Beschreibung der Änderungen"
+
+   git push origin main
    ```
+
 
 5. **Hole die neuesten Änderungen vom Remote-Repository**:
 
