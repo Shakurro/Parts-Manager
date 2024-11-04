@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import FooterLayout from '../layouts/FooterLayout.vue';
+import FooterLayout from '../layouts/admin/FooterLayout.vue';
 
 export default {
   data() {

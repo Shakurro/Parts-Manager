@@ -10,7 +10,7 @@
           <!-- Parts in Stock -->
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Parts in Stock</h3>
-            <p class="text-gray-700">Es sind 963 Parts im Lager</p>
+            <p class="text-gray-700">Es sind {{ parts.length }} Parts im Lager</p>
           </div>
 
           <!-- Recent Orders -->
@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import HeaderLayout from './layouts/HeaderLayout.vue';
-import FooterLayout from './layouts/FooterLayout.vue';
+import HeaderLayout from './layouts/admin/HeaderLayout.vue';
+import FooterLayout from './layouts/admin/FooterLayout.vue';
 
 export default {
   name: 'App',
@@ -65,12 +65,7 @@ export default {
   },
   data() {
     return {
-      parts: [
-        { id: 1, name: 'Part A', description: 'Description for Part A', price: '$10' },
-        { id: 2, name: 'Part B', description: 'Description for Part B', price: '$20' },
-        { id: 3, name: 'Part C', description: 'Description for Part C', price: '$30' },
-        // Add more parts as needed
-      ],
+      parts: [],
       recentOrders: [
         { id: 1, name: 'Order 101', status: 'Pending' },
         { id: 2, name: 'Order 102', status: 'Pending' },
@@ -78,6 +73,20 @@ export default {
         // Add more orders as needed
       ]
     };
+  },
+  mounted() {
+    this.fetchParts();
+  },
+  methods: {
+    async fetchParts() {
+      try {
+        const response = await fetch('http://localhost:1337/parts');
+        const data = await response.json();
+        this.parts = data;
+      } catch (error) {
+        console.error('Error fetching parts:', error);
+      }
+    }
   }
 };
 </script>

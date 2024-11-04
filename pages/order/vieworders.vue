@@ -12,7 +12,7 @@
           <h3 class="text-lg font-bold mb-4">New Order</h3>
           <ul>
             <li>
-              <NuxtLink to="/neworder"><button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-200">New Order</button></NuxtLink>
+              <NuxtLink to="/order/new"><button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-200">New Order</button></NuxtLink>
             </li>
           </ul>
         </div>
@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import HeaderLayout from '../layouts/HeaderLayout.vue';
-import FooterLayout from '../layouts/FooterLayout.vue';
+import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
+import FooterLayout from '../layouts/admin/FooterLayout.vue';
 
 export default {
   name: 'Orders',

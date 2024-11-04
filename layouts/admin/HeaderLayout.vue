@@ -4,8 +4,8 @@
       <h1 class="text-2xl font-bold text-white">Parts Manager</h1>
       <nav class="flex space-x-4 items-center ml-auto">
         <NuxtLink to="/app" class="text-gray-300 hover:text-white">Home</NuxtLink>
-        <NuxtLink to="/parts" class="text-gray-300 hover:text-white">Parts</NuxtLink>
-        <NuxtLink to="/orders" class="text-gray-300 hover:text-white">Orders</NuxtLink>
+        <NuxtLink to="/parts/list" class="text-gray-300 hover:text-white">Parts</NuxtLink>
+        <NuxtLink to="/order/vieworders" class="text-gray-300 hover:text-white">Orders</NuxtLink>
         <UserAvatar />
       </nav>
     </div>

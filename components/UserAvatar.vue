@@ -38,7 +38,7 @@ export default {
     },
     navigateToSettings() {
       if (this.isAdmin) {
-        this.$router.push('/settings');
+        this.$router.push('/user/settings');
       } else {
         console.log('Zugriff verweigert: Nur Admins können die Einstellungen aufrufen.');
       }

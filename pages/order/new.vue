@@ -24,7 +24,7 @@
                 :key="part.id"
                 class="flex justify-between items-center p-2 border-b border-gray-200"
               >
-                <span>{{ part.name }} - {{ part.price }}</span>
+                <span>{{ part.Partnumber }} - {{ part.Beschreibung }}</span>
                 <button
                   @click="addToCart(part)"
                   class="bg-gray-800 text-white py-1 px-3 rounded hover:bg-gray-600 transition duration-200"
@@ -43,9 +43,9 @@
                 <li
                   v-for="item in cart"
                   :key="item.id"
-                  class="flex justify-between items-center p-4 border-b border-gray-200 text-lg"
+                  class="flex justify-between items-center p-4 border-b border-gray-200"
                 >
-                  <span>{{ item.name }} - {{ item.price }}</span>
+                  <span class="cart-item-text">{{ item.Partnumber }} - {{ item.Beschreibung }}</span>
                   <div class="flex items-center">
                     <span class="text-xl font-semibold mr-4">{{ item.quantity }}x</span>
                     <button
@@ -83,8 +83,9 @@
   </template>
   
   <script>
-  import HeaderLayout from '../layouts/HeaderLayoutUser.vue';
-  import FooterLayout from '../layouts/FooterLayout.vue';
+  import HeaderLayout from '../layouts/user/HeaderLayoutUser.vue';
+  import FooterLayout from '../layouts/user/FooterLayoutUser.vue';
+  import axios from 'axios'; // Importiere Axios oder eine andere HTTP-Bibliothek
   
   export default {
     name: 'NewOrder',
@@ -95,24 +96,29 @@
     data() {
       return {
         searchQuery: '',
-        parts: [
-          { id: 1, name: 'Part A', price: '$10' },
-          { id: 2, name: 'Part B', price: '$20' },
-          { id: 3, name: 'Part C', price: '$30' },
-          // Weitere Teile hinzufügen
-        ],
+        parts: [],
         cart: [],
-        workpackNumber: '' // Workpacknummer
+        workpackNumber: ''
       };
     },
     computed: {
       filteredParts() {
         return this.parts.filter(part =>
-          part.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          part.Beschreibung.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          part.Partnumber.toLowerCase().includes(this.searchQuery.toLowerCase())
         );
       }
     },
     methods: {
+      async fetchParts() {
+        try {
+          const response = await axios.get('http://localhost:1337/parts');
+          console.log('API Response:', response.data);
+          this.parts = response.data;
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Teile:', error);
+        }
+      },
       addToCart(part) {
         const cartItem = this.cart.find(item => item.id === part.id);
         if (cartItem) {
@@ -133,6 +139,9 @@
         console.log('Bestellung abgeschlossen:', this.cart, 'Workpacknummer:', this.workpackNumber);
         // Logik zum Abschließen der Bestellung implementieren
       }
+    },
+    mounted() {
+      this.fetchParts(); // Teile beim Laden der Komponente abrufen
     }
   };
   </script>
@@ -168,6 +177,11 @@
   .complete-order-btn:hover {
     background-color: #75fb6f;
     transform: translateY(-2px);
+  }
+  
+  /* New style for cart item text */
+  .cart-item-text {
+    font-size: 0.875rem; /* Adjust the font size as needed */
   }
   </style>
   

@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import HeaderLayout from './layouts/HeaderLayout.vue';
-import FooterLayout from './layouts/FooterLayout.vue';
+import HeaderLayout from './layouts/admin/HeaderLayout.vue';
+import FooterLayout from './layouts/admin/FooterLayout.vue';
 
 export default {
   name: 'PartView',

@@ -102,8 +102,8 @@
 
 <script>
 import axios from 'axios';
-import HeaderLayout from '../layouts/HeaderLayout.vue';
-import FooterLayout from '../layouts/FooterLayout.vue';
+import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
+import FooterLayout from '../layouts/admin/FooterLayout.vue';
 
 export default {
   name: 'Parts',
@@ -122,13 +122,19 @@ export default {
     };
   },
   computed: {
+    filteredParts() {
+      return this.parts.filter(part => 
+        part.Beschreibung.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        part.Partnumber.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
     paginatedParts() {
       const start = (this.currentPage - 1) * this.partsPerPage;
       const end = this.currentPage * this.partsPerPage;
-      return this.parts.slice(start, end);
+      return this.filteredParts.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.parts.length / this.partsPerPage);
+      return Math.ceil(this.filteredParts.length / this.partsPerPage);
     }
   },
   mounted() {
@@ -138,7 +144,7 @@ export default {
     async fetchParts() {
       try {
         const response = await axios.get('http://localhost:1337/parts');
-        console.log(response.data); // Check the structure of the data
+        console.log('API Response:', response.data); // Überprüfe die Struktur der Daten
         this.parts = response.data.sort((a, b) => a.id - b.id);
       } catch (error) {
         console.error('Fehler beim Abrufen der Teile:', error);
