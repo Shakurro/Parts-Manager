@@ -4,9 +4,9 @@
     <HeaderLayout />
 
     <!-- Main Content -->
-    <main class="flex-1 container mx-auto px-4 py-6 flex">
+    <main class="flex-1 container mx-auto px-4 py-6 flex flex-col md:flex-row">
       <!-- Sidebar with Search and Filters -->
-      <aside class="w-1/4 h-1/2 bg-white p-4 rounded shadow-md mr-4">
+      <aside class="w-full md:w-1/4 h-auto bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4">
         <h3 class="text-lg font-bold mb-4">Suche und Filter</h3>
         <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="searchQuery" />
         
@@ -49,22 +49,24 @@
       </aside>
 
       <!-- Parts List -->
-      <div class="w-3/4 bg-white p-6 rounded shadow-md">
-        <h2 class="text-xl font-bold mb-4">Parts List</h2>
+      <div class="w-full md:w-3/4 bg-white p-6 rounded shadow-md">
+        <h2 class="text-xl font-bold mb-4">Teileliste</h2>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead class="bg-gray-800 text-white">
               <tr>
-                <th class="w-1/3 px-4 py-2 text-left">Part Name</th>
-                <th class="w-1/3 px-4 py-2 text-left">Description</th>
-                <th class="w-1/3 px-4 py-2 text-left">Price</th>
+                <th class="w-1/6 px-4 py-2 text-left">ID</th>
+                <th class="w-1/3 px-4 py-2 text-left">Beschreibung</th>
+                <th class="w-1/6 px-4 py-2 text-left">EKPreis</th>
+                <th class="w-1/6 px-4 py-2 text-left">VKPreis</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="part in filteredParts" :key="part.id" class="border-b hover:bg-gray-100">
-                <td class="px-4 py-2">{{ part.name }}</td>
-                <td class="px-4 py-2">{{ part.description }}</td>
-                <td class="px-4 py-2">{{ part.price }}</td>
+              <tr v-for="part in paginatedParts" :key="part.id" class="border-b hover:bg-gray-100">
+                <td class="px-4 py-2">{{ part.id }}</td>
+                <td class="px-4 py-2">{{ part.beschreibung }}</td>
+                <td class="px-4 py-2">{{ part.EKPreis }}</td>
+                <td class="px-4 py-2">{{ part.VKPreis }}</td>
               </tr>
             </tbody>
           </table>
@@ -95,6 +97,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import HeaderLayout from '../layouts/HeaderLayout.vue';
 import FooterLayout from '../layouts/FooterLayout.vue';
 
@@ -107,46 +110,33 @@ export default {
   data() {
     return {
       searchQuery: '',
-      parts: [
-        { id: 1, name: 'Part A', description: 'Description for Part A', price: '$10' },
-        { id: 2, name: 'Part B', description: 'Description for Part B', price: '$20' },
-        { id: 3, name: 'Part C', description: 'Description for Part C', price: '$30' },
-        { id: 4, name: 'Part D', description: 'Description for Part D', price: '$40' },
-        { id: 5, name: 'Part E', description: 'Description for Part E', price: '$50' },
-        { id: 6, name: 'Part F', description: 'Description for Part F', price: '$60' },
-        { id: 7, name: 'Part G', description: 'Description for Part G', price: '$70' },
-        { id: 8, name: 'Part H', description: 'Description for Part H', price: '$80' },
-        { id: 9, name: 'Part I', description: 'Description for Part I', price: '$90' },
-        { id: 10, name: 'Part J', description: 'Description for Part J', price: '$100' },
-        { id: 11, name: 'Part K', description: 'Description for Part K', price: '$110' },
-        { id: 12, name: 'Part L', description: 'Description for Part L', price: '$120' },
-        { id: 13, name: 'Part M', description: 'Description for Part M', price: '$130' },
-        { id: 14, name: 'Part N', description: 'Description for Part N', price: '$140' },
-        { id: 11, name: 'Part K', description: 'Description for Part K', price: '$110' },
-        { id: 12, name: 'Part L', description: 'Description for Part L', price: '$120' },
-        { id: 13, name: 'Part M', description: 'Description for Part M', price: '$130' },
-        { id: 14, name: 'Part N', description: 'Description for Part N', price: '$140' },
-      ],
+      parts: [],
       currentPage: 1,
-      partsPerPage: 13,
+      partsPerPage: 20
     };
   },
   computed: {
-    filteredParts() {
+    paginatedParts() {
       const start = (this.currentPage - 1) * this.partsPerPage;
       const end = this.currentPage * this.partsPerPage;
-      return this.parts
-        .filter(part => 
-          part.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          part.description.toLowerCase().includes(this.searchQuery.toLowerCase())
-        )
-        .slice(start, end);
+      return this.parts.slice(start, end);
     },
     totalPages() {
       return Math.ceil(this.parts.length / this.partsPerPage);
     }
   },
+  mounted() {
+    this.fetchParts();
+  },
   methods: {
+    async fetchParts() {
+      try {
+        const response = await axios.get('https://x8ki-letl-twmt.n7.xano.io/api:jVdPjC_x/pilot_xlsm_datenbank');
+        this.parts = response.data.sort((a, b) => a.id - b.id);
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Teile:', error);
+      }
+    },
     goToPage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page;
