@@ -20,9 +20,14 @@
               <div class="w-1/2 p-2">
                 <h3><b><u>Part Info</u></b></h3>
                 <div class="my-3"></div>
-                <div class="h-6 bg-gray-300 mb-2 border-4 border-gray-600"></div>
-                <div class="h-6 bg-gray-300 mb-2 border-4 border-gray-600"></div>
-                <div class="h-6 bg-gray-300 mb-2 border-4 border-gray-600"></div>
+                <div v-if="part">
+                  <div class="mb-2">ID: {{ part.id }}</div>
+                  <div class="mb-2">Partnumber: {{ part.Partnumber }}</div>
+                  <div class="mb-2">Beschreibung: {{ part.Beschreibung }}</div>
+                </div>
+                <div v-else>
+                  <div>Loading...</div>
+                </div>
               </div>
               <div class="w-px bg-gray-400"></div>
               <div class="w-1/2 p-2">
@@ -67,6 +72,7 @@
 <script>
 import HeaderLayout from './layouts/admin/HeaderLayout.vue';
 import FooterLayout from './layouts/admin/FooterLayout.vue';
+import axios from 'axios';
 
 export default {
   name: 'PartView',
@@ -74,6 +80,30 @@ export default {
     HeaderLayout,
     FooterLayout
   },
+  data() {
+    return {
+      part: null
+    };
+  },
+  created() {
+    const partId = this.$route.params.id;
+    if (partId) {
+      this.fetchPartDetails(partId);
+    } else {
+      console.error('Part ID is undefined');
+    }
+  },
+  methods: {
+    async fetchPartDetails(id) {
+      try {
+        const response = await axios.get(`http://localhost:1337/parts/${id}`);
+        console.log('API Response:', response.data); // Debugging: Log the API response
+        this.part = response.data;
+      } catch (error) {
+        console.error('Error fetching part details:', error);
+      }
+    }
+  }
 };
 </script>
 

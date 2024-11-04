@@ -55,26 +55,32 @@
           <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead class="bg-gray-800 text-white">
               <tr>
-                <th class="w-1/6 px-4 py-2 text-left">ID</th>
-                <th class="w-1/6 px-4 py-2 text-left">Partnumber</th>
-                <th class="w-1/3 px-4 py-2 text-left">Beschreibung</th>
-                <th class="w-1/6 px-4 py-2 text-left">InStock</th>
-                <th class="w-1/6 px-4 py-2 text-left">EKPreis</th>
-                <th class="w-1/6 px-4 py-2 text-left">VKPreis</th>
+                <th class="w-1/12 px-4 py-2 text-left">ID</th>
+                <th class="w-2/12 px-4 py-2 text-left">Partnumber</th>
+                <th class="w-4/12 px-4 py-2 text-left">Description</th>
+                <th class="w-1/12 px-4 py-2 text-left">InStock</th>
+                <th class="w-2/12 px-4 py-2 text-left">Buying-Prices</th>
+                <th class="w-2/12 px-4 py-2 text-left">Selling-Prices</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="part in paginatedParts" :key="part.id" class="border-b hover:bg-gray-100">
+              <tr 
+                v-for="part in paginatedParts" 
+                :key="part.id" 
+                class="border-b hover:bg-gray-100 cursor-pointer"
+                @click="viewPart(part.id)"
+              >
                 <td class="px-4 py-2">{{ part.id }}</td>
-                <td class="px-4 py-2">{{ part.Partnumber }}</td>
-                <td class="px-4 py-2">{{ part.Beschreibung }}</td>
-                <td class="px-4 py-2">{{ part.InStock }}</td>
-                <td class="px-4 py-2">{{ part.EKPreis }}</td>
-                <td class="px-4 py-2">{{ part.VKPreis }}</td>
+                <td class="px-4 py-2">{{ part.partnumber }}</td>
+                <td class="px-4 py-2">{{ part.description }}</td>
+                <td class="px-4 py-2">{{ part.instock }}</td>
+                <td class="px-4 py-2">{{ part.buying_price_eur }}</td>
+                <td class="px-4 py-2">{{ part.selling_price_eur }}</td>
               </tr>
             </tbody>
           </table>
         </div>
+        <!-- Pagination Controls -->
         <div class="flex justify-between mt-4">
           <button 
             :disabled="currentPage === 1" 
@@ -118,42 +124,63 @@ export default {
       currentPage: 1,
       partsPerPage: 20,
       selectedCategories: [],
-      selectedCategory: ''
+      selectedCategory: '',
     };
   },
   computed: {
     filteredParts() {
       return this.parts.filter(part => 
-        part.Beschreibung.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        part.Partnumber.toLowerCase().includes(this.searchQuery.toLowerCase())
+        part.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        part.partnumber.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+    },
+    sortedFilteredParts() {
+      return this.filteredParts.sort((a, b) => a.id - b.id);
     },
     paginatedParts() {
       const start = (this.currentPage - 1) * this.partsPerPage;
       const end = this.currentPage * this.partsPerPage;
-      return this.filteredParts.slice(start, end);
+      return this.sortedFilteredParts.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.filteredParts.length / this.partsPerPage);
+      return Math.ceil(this.sortedFilteredParts.length / this.partsPerPage);
     }
   },
   mounted() {
-    this.fetchParts();
+    this.fetchAllItems();
   },
   methods: {
-    async fetchParts() {
+    async fetchAllItems() {
       try {
-        const response = await axios.get('http://localhost:1337/parts');
-        console.log('API Response:', response.data); // Überprüfe die Struktur der Daten
-        this.parts = response.data.sort((a, b) => a.id - b.id);
+        let allItems = [];
+        let page = 1;
+        const pageSize = 100;
+
+        while (true) {
+          const response = await axios.get(`http://localhost:1337/items?_start=${(page - 1) * pageSize}&_limit=${pageSize}`);
+          const items = response.data;
+          allItems = allItems.concat(items);
+
+          if (items.length < pageSize) {
+            break; // Exit loop if fewer items than pageSize are returned
+          }
+
+          page++;
+        }
+
+        this.parts = allItems;
+        console.log('Total items fetched:', allItems.length);
       } catch (error) {
         console.error('Fehler beim Abrufen der Teile:', error);
       }
     },
     goToPage(page) {
-      if (page >= 1 && page <= this.totalPages) {
+      if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
       }
+    },
+    viewPart(id) {
+      // Implement the logic to view part details
     }
   }
 };
