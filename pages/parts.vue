@@ -56,7 +56,9 @@
             <thead class="bg-gray-800 text-white">
               <tr>
                 <th class="w-1/6 px-4 py-2 text-left">ID</th>
+                <th class="w-1/6 px-4 py-2 text-left">Partnumber</th>
                 <th class="w-1/3 px-4 py-2 text-left">Beschreibung</th>
+                <th class="w-1/6 px-4 py-2 text-left">InStock</th>
                 <th class="w-1/6 px-4 py-2 text-left">EKPreis</th>
                 <th class="w-1/6 px-4 py-2 text-left">VKPreis</th>
               </tr>
@@ -64,7 +66,9 @@
             <tbody>
               <tr v-for="part in paginatedParts" :key="part.id" class="border-b hover:bg-gray-100">
                 <td class="px-4 py-2">{{ part.id }}</td>
-                <td class="px-4 py-2">{{ part.beschreibung }}</td>
+                <td class="px-4 py-2">{{ part.Partnumber }}</td>
+                <td class="px-4 py-2">{{ part.Beschreibung }}</td>
+                <td class="px-4 py-2">{{ part.InStock }}</td>
                 <td class="px-4 py-2">{{ part.EKPreis }}</td>
                 <td class="px-4 py-2">{{ part.VKPreis }}</td>
               </tr>
@@ -112,7 +116,9 @@ export default {
       searchQuery: '',
       parts: [],
       currentPage: 1,
-      partsPerPage: 20
+      partsPerPage: 20,
+      selectedCategories: [],
+      selectedCategory: ''
     };
   },
   computed: {
@@ -131,7 +137,8 @@ export default {
   methods: {
     async fetchParts() {
       try {
-        const response = await axios.get('https://x8ki-letl-twmt.n7.xano.io/api:jVdPjC_x/pilot_xlsm_datenbank');
+        const response = await axios.get('http://localhost:1337/parts');
+        console.log(response.data); // Check the structure of the data
         this.parts = response.data.sort((a, b) => a.id - b.id);
       } catch (error) {
         console.error('Fehler beim Abrufen der Teile:', error);
