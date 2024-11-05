@@ -79,7 +79,7 @@
                 v-for="part in paginatedParts" 
                 :key="part.id" 
                 class="border-b hover:bg-gray-100 cursor-pointer"
-                @click="viewPart(part.id)"
+                @click="viewPart(part)"
               >
                 <td class="px-4 py-2">{{ part.id }}</td>
                 <td class="px-4 py-2">{{ part.partnumber }}</td>
@@ -114,6 +114,20 @@
 
     <!-- Include Footer Layout -->
     <FooterLayout />
+
+    <!-- Part Detail Popup -->
+    <PartDetailPopup 
+      :visible="isPopupVisible" 
+      :part="selectedPart" 
+      @close="isPopupVisible = false" 
+      @update="updatePart"
+    />
+
+    <!-- Notification Popup -->
+    <NotificationPopup 
+      :visible="isNotificationVisible" 
+      @close="closeNotification"
+    />
   </div>
 </template>
 
@@ -121,12 +135,16 @@
 import axios from 'axios';
 import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
 import FooterLayout from '../layouts/admin/FooterLayout.vue';
+import PartDetailPopup from '../components/PartDetailPopup.vue';
+import NotificationPopup from '../components/NotificationPopup.vue'; // Import the component
 
 export default {
   name: 'Parts',
   components: {
     HeaderLayout,
     FooterLayout,
+    PartDetailPopup,
+    NotificationPopup
   },
   data() {
     return {
@@ -136,6 +154,9 @@ export default {
       partsPerPage: 20,
       selectedCategories: [],
       selectedCategory: '',
+      isPopupVisible: false,
+      isNotificationVisible: false,
+      selectedPart: null
     };
   },
   computed: {
@@ -166,27 +187,31 @@ export default {
   },
   methods: {
     async fetchAllItems() {
+      let allItems = [];
+      let page = 1;
+      const pageSize = 100; // Anzahl der Einträge pro Anfrage
+
       try {
-        let allItems = [];
-        let page = 1;
-        const pageSize = 100;
-
         while (true) {
-          const response = await axios.get(`http://localhost:1337/items?_start=${(page - 1) * pageSize}&_limit=${pageSize}`);
-          const items = response.data;
-          allItems = allItems.concat(items);
+          const response = await axios.get(`http://localhost:1337/items`, {
+            params: {
+              _start: (page - 1) * pageSize,
+              _limit: pageSize
+            }
+          });
 
-          if (items.length < pageSize) {
-            break; // Exit loop if fewer items than pageSize are returned
+          const items = response.data;
+          if (items.length === 0) {
+            break; // Keine weiteren Einträge
           }
 
+          allItems = allItems.concat(items);
           page++;
         }
 
         this.parts = allItems;
-        console.log('Total items fetched:', allItems.length);
       } catch (error) {
-        console.error('Fehler beim Abrufen der Teile:', error);
+        console.error('Error fetching items:', error);
       }
     },
     goToPage(page) {
@@ -194,8 +219,9 @@ export default {
         this.currentPage = page;
       }
     },
-    viewPart(id) {
-      // Implement the logic to view part details
+    viewPart(part) {
+      this.selectedPart = part;
+      this.isPopupVisible = true;
     },
     applyFilter() {
       // This method can be used to trigger any additional logic if needed
@@ -206,6 +232,23 @@ export default {
       this.searchQuery = '';
       console.log('Filters cleared');
     },
+    updatePart(updatedPart) {
+      const index = this.parts.findIndex(part => part.id === updatedPart.id);
+      if (index !== -1) {
+        this.parts[index] = updatedPart; // Directly assign the updated part
+      }
+      this.isPopupVisible = false; // Close the detail popup
+      this.isNotificationVisible = true; // Show notification
+      this.fetchAllItems(); // Refresh the list
+    },
+    closeNotification() {
+      this.isNotificationVisible = false;
+    }
+  },
+  watch: {
+    selectedCategories() {
+      this.currentPage = 1;
+    }
   }
 };
 </script>

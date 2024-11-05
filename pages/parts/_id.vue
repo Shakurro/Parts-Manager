@@ -86,17 +86,17 @@ export default {
     };
   },
   created() {
-    const partId = this.$route.params.id;
-    if (partId) {
+    const partId = parseInt(this.$route.params.id, 10);
+    if (!isNaN(partId)) {
       this.fetchPartDetails(partId);
     } else {
-      console.error('Part ID is undefined');
+      console.error('Invalid Part ID:', this.$route.params.id);
     }
   },
   methods: {
     async fetchPartDetails(id) {
       try {
-        const response = await axios.get(`http://localhost:1337/parts/${id}`);
+        const response = await axios.get(`http://localhost:1337/items/${id}`);
         console.log('API Response:', response.data); // Debugging: Log the API response
         this.part = response.data;
       } catch (error) {
