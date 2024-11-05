@@ -6,62 +6,80 @@
     <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6 flex flex-col md:flex-row">
       <!-- Sidebar with Search and Filters -->
-      <aside class="w-full md:w-1/4 h-auto bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4">
-        <h3 class="text-lg font-bold mb-4">Suche und Filter</h3>
-        <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="searchQuery" />
-        
-        <h4 class="text-md font-semibold mb-2">Filter nach Kategorie</h4>
-        <div class="mb-4">
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="1" class="mr-2" />
-            Aufbau
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="2" class="mr-2" />
-            Rahmen
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="3" class="mr-2" />
-            Elektrik
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="4" class="mr-2" />
-            Motor
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="5" class="mr-2" />
-            Bremse
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="6" class="mr-2" />
-            Achse
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="7" class="mr-2" />
-            Betriebsstoffe
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="8" class="mr-2" />
-            Schrauben
-          </label>
-          <label class="block text-gray-700">
-            <input type="checkbox" v-model="selectedCategories" value="9" class="mr-2" />
-            Ladeboardwand
-          </label>
-        </div>
-        <div class="flex justify-between">
-          <button 
-            @click="clearFilters"
-            class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-red-800 transition duration-200"
-          >
-          Filter entfernen
-          </button>
+      <aside class="w-full md:w-1/4 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4" style="display: inline-block;">
+        <div>
+          <h3 class="text-lg font-bold mb-4">Suche und Filter</h3>
+          <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="searchQuery" />
+          
+          <!-- Container for the category filters -->
+          <div class="mb-4">
+            <h4 class="text-md font-semibold mb-2">Filter nach Kategorie</h4>
+            <div>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="1" class="mr-2" />
+                Aufbau
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="2" class="mr-2" />
+                Rahmen
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="3" class="mr-2" />
+                Elektrik
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="4" class="mr-2" />
+                Motor
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="5" class="mr-2" />
+                Bremse
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="6" class="mr-2" />
+                Achse
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="7" class="mr-2" />
+                Betriebsstoffe
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="8" class="mr-2" />
+                Schrauben
+              </label>
+              <label class="block text-gray-700">
+                <input type="checkbox" v-model="selectedCategories" value="9" class="mr-2" />
+                Ladeboardwand
+              </label>
+            </div>
+          </div>
+
+          <!-- Added space between the two sections -->
+          <div class="mb-4"></div>
+
+          <!-- Container for the filter button -->
+          <div class="flex justify-between mb-4">
+            <button 
+              @click="clearFilters"
+              class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-red-800 transition duration-200"
+            >
+              Filter entfernen
+            </button>
+          </div>
         </div>
       </aside>
 
       <!-- Parts List -->
       <div class="w-full md:w-3/4 bg-white p-6 rounded shadow-md">
-        <h2 class="text-xl font-bold mb-4">Teileliste</h2>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold">Teileliste</h2>
+          <button 
+            class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
+            @click="isAddPopupVisible = true"
+          >
+            Hinzufügen
+          </button>
+        </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead class="bg-gray-800 text-white">
@@ -128,6 +146,12 @@
       :visible="isNotificationVisible" 
       @close="closeNotification"
     />
+
+    <AddPartPopup 
+      :visible="isAddPopupVisible" 
+      @close="isAddPopupVisible = false" 
+      @add="addPart"
+    />
   </div>
 </template>
 
@@ -137,6 +161,7 @@ import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
 import FooterLayout from '../layouts/admin/FooterLayout.vue';
 import PartDetailPopup from '../components/PartDetailPopup.vue';
 import NotificationPopup from '../components/NotificationPopup.vue'; // Import the component
+import AddPartPopup from '../components/AddPartPopup.vue'; // Import the new component
 
 export default {
   name: 'Parts',
@@ -144,7 +169,8 @@ export default {
     HeaderLayout,
     FooterLayout,
     PartDetailPopup,
-    NotificationPopup
+    NotificationPopup,
+    AddPartPopup
   },
   data() {
     return {
@@ -156,7 +182,8 @@ export default {
       selectedCategory: '',
       isPopupVisible: false,
       isNotificationVisible: false,
-      selectedPart: null
+      selectedPart: null,
+      isAddPopupVisible: false, // New state for add popup visibility
     };
   },
   computed: {
@@ -202,7 +229,7 @@ export default {
 
           const items = response.data;
           if (items.length === 0) {
-            break; // Keine weiteren Einträge
+            break; // Keine weiteren Eintrge
           }
 
           allItems = allItems.concat(items);
@@ -232,17 +259,49 @@ export default {
       this.searchQuery = '';
       console.log('Filters cleared');
     },
-    updatePart(updatedPart) {
+    async updatePart(updatedPart) {
       const index = this.parts.findIndex(part => part.id === updatedPart.id);
       if (index !== -1) {
-        this.parts[index] = updatedPart; // Directly assign the updated part
+        const originalPart = { ...this.parts[index] }; // Kopie der ursprünglichen Daten
+
+        try {
+          this.parts[index] = updatedPart; // Aktualisierte Daten zuweisen
+
+          // Änderungen protokollieren
+          const changeLog = {
+            who: 'currentUser', // Ersetzen Sie dies durch die tatsächliche Benutzeridentifikation
+            when: new Date().toISOString(),
+            before_change: JSON.stringify(originalPart),
+            after_change: JSON.stringify(updatedPart)
+          };
+
+          console.log('Logging change:', changeLog); // Protokollierung der Änderungen zur Überprüfung
+
+          // Übermitteln der Änderungen an die API
+          await axios.post('http://localhost:1337/changes', changeLog);
+        } catch (error) {
+          console.error('Error logging change:', error.response ? error.response.data : error.message);
+          // Rückgängig machen der Änderungen
+          this.parts[index] = originalPart; // Setze die ursprünglichen Daten zurück
+        }
       }
-      this.isPopupVisible = false; // Close the detail popup
-      this.isNotificationVisible = true; // Show notification
-      this.fetchAllItems(); // Refresh the list
+      this.isPopupVisible = false; // Schließen des Detail-Popups
+      this.isNotificationVisible = true; // Benachrichtigung anzeigen
+      this.fetchAllItems(); // Liste aktualisieren
     },
     closeNotification() {
       this.isNotificationVisible = false;
+    },
+    async addPart(newPart) {
+      try {
+        // Save the new part to the database
+        const response = await axios.post('http://localhost:1337/items', newPart);
+        this.parts.push(response.data); // Add the new part to the list
+        this.isAddPopupVisible = false; // Close the popup
+        this.isNotificationVisible = true; // Show notification
+      } catch (error) {
+        console.error('Error adding part:', error.response ? error.response.data : error.message);
+      }
     }
   },
   watch: {
