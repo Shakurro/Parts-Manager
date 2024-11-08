@@ -98,7 +98,7 @@
                 <td class="px-4 py-2">{{ part.partnumber }}</td>
                 <td class="px-4 py-2">{{ part.description }}</td>
                 <td class="px-4 py-2">{{ part.instock }}</td>
-                <td class="px-4 py-2">{{ part.buying_price_eur }}-€</td>
+                <td class="px-4 py-2">{{ part.buying_price_eur }}</td>
                 <td class="px-4 py-2">{{ part.selling_price_eur }}€</td>
                 <td class="px-4 py-2">{{ getCategoryName(part.category) }}</td>
               </tr>

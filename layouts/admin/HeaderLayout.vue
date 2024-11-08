@@ -6,6 +6,7 @@
         <NuxtLink to="/app" class="text-gray-300 hover:text-white">Home</NuxtLink>
         <NuxtLink to="/parts/list" class="text-gray-300 hover:text-white">Parts</NuxtLink>
         <NuxtLink to="/order/vieworders" class="text-gray-300 hover:text-white">Orders</NuxtLink>
+        <NuxtLink to="/parts/list" class="text-gray-300 hover:text-white">Admin Panel</NuxtLink>
         <UserAvatar />
       </nav>
     </div>

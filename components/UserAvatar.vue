@@ -5,7 +5,6 @@
       <ul>
         <li class="username-branch-display">{{ username }} ({{ branch }})</li>
         <li class="role-display">Rolle: {{ userRole }}</li>
-        <li @click="viewProfile">Profil anzeigen</li>
         <li v-if="isAdmin" @click="navigateToSettings">Einstellungen</li>
         <li @click="logout">Abmelden</li>
       </ul>
