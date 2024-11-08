@@ -21,7 +21,7 @@
 
           <!-- Recent Orders -->
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Neue Buchungen</h3>
+            <h3 class="text-lg font-bold mb-2">Placeholder</h3>
             <ul class="text-gray-700">
               <li v-for="order in recentOrders" :key="order.id">
                 {{ order.name }} - {{ order.status }}
@@ -38,16 +38,17 @@
           <!-- Active Warenkörbe -->
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Active Warenkörbe</h3>
-            <p class="text-gray-700">Mechanic Peters is now active</p>
-            <p class="text-gray-700">Mechanic Meters is now active</p>
-            <p class="text-gray-700">Mechanic Feters is now active</p>
-            <p class="text-gray-700">Mechanic Keters is now active</p>
+            <p class="text-gray-700">52500098457</p>
+            <p class="text-gray-700">52500097584</p>
+            <p class="text-gray-700">52500097845</p>
+            <p class="text-gray-700">52500098745</p>
           </div>
 
           <!-- Sales Overview -->
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Total Parts used</h3>
-            <p class="text-gray-700">Es wurden im Juni 172 Parts verbaut.</p>
+            <h3 class="text-lg font-bold mb-2">News</h3>
+            <p class="text-gray-700">Es wurden weiter 78 Ersatzteile hinzugefügt.</p>
+            <p class="text-gray-700">Die Benutzeroberfläche wurde aktualisiert, um die Navigation zu verbessern.</p>
           </div>
         </div>
 

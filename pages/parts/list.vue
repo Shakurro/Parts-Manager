@@ -96,7 +96,7 @@
               >
                 <td class="px-4 py-2">{{ part.id }}</td>
                 <td class="px-4 py-2">{{ part.partnumber }}</td>
-                <td class="px-4 py-2">{{ part.description }}</td>
+                <td class="px-4 py-2">{{ truncateDescription(part.description) }}</td>
                 <td class="px-4 py-2">{{ part.instock }}</td>
                 <td class="px-4 py-2">{{ part.buying_price_eur }}</td>
                 <td class="px-4 py-2">{{ part.selling_price_eur }}€</td>
@@ -176,7 +176,7 @@ export default {
       searchQuery: '',
       parts: [],
       currentPage: 1,
-      partsPerPage: 20,
+      partsPerPage: 13,
       selectedCategories: [],
       selectedCategory: '',
       isPopupVisible: false,
@@ -315,9 +315,18 @@ export default {
         9: 'Ladeboardwand'
       };
       return categoryMap[categoryId] || 'fehlt';
+    },
+    truncateDescription(description) {
+      if (description.length > 20) {
+        return description.substring(0, 20) + '...';
+      }
+      return description;
     }
   },
   watch: {
+    searchQuery() {
+      this.currentPage = 1;
+    },
     selectedCategories() {
       this.currentPage = 1;
     }

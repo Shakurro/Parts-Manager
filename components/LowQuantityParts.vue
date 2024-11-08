@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white p-6 rounded shadow-md mt-6">
-    <h3 class="text-lg font-bold mb-2">Parts with Low Quantity and Low Price</h3>
+    <h3 class="text-lg font-bold mb-2">Parts with Low Quantity</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="part in displayedParts" :key="part.id" class="border rounded p-4 shadow-sm">
         <h4 class="font-semibold">{{ part.partnumber }}</h4>
