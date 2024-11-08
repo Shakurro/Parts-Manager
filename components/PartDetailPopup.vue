@@ -4,7 +4,7 @@
       <div class="bg-white rounded-lg shadow-lg w-4/5 max-w-4xl relative">
         <!-- Header Section -->
         <div class="bg-gray-800 text-white p-4 rounded-t-lg flex justify-between items-center">
-          <h2 class="text-2xl font-bold">Ersatzteil Details bearbeiten</h2>
+          <h2 class="text-2xl font-bold">Ersatzteil Details</h2>
           <button @click="close" class="text-white text-3xl font-bold">×</button>
         </div>
         <!-- Content Section -->
@@ -12,15 +12,15 @@
           <!-- Left Section: Part Information -->
           <div class="flex-1 space-y-4">
             <div>
-              <label class="block text-gray-700">Partnumber:</label>
+              <label class="block text-gray-700">Ersatzteil:</label>
               <input v-model="editablePart.partnumber" class="w-full p-2 border rounded" type="text" />
             </div>
             <div>
-              <label class="block text-gray-700">InStock:</label>
+              <label class="block text-gray-700">Verfügbar:</label>
               <input v-model.number="editablePart.instock" class="w-full p-2 border rounded" type="number" />
             </div>
             <div>
-              <label class="block text-gray-700">Description:</label>
+              <label class="block text-gray-700">Beschreibung:</label>
               <textarea v-model="editablePart.description" class="w-full p-2 border rounded" rows="3"></textarea>
             </div>
             <div class="flex space-x-4">
@@ -38,7 +38,7 @@
               </div>
             </div>
             <div>
-              <label class="block text-gray-700">Category:</label>
+              <label class="block text-gray-700">Kategorie:</label>
               <select v-model="editablePart.category_id" class="w-full p-2 border rounded">
                 <option v-for="category in categories" :key="category.id" :value="category.id">
                   {{ category.name }}
@@ -49,12 +49,16 @@
           <!-- Right Section: Prices -->
           <div class="flex-1 space-y-4">
             <div>
-              <label class="block text-gray-700">Buying Price (€):</label>
+              <label class="block text-gray-700">Einkaufs Preis (€):</label>
               <input v-model.number="editablePart.buying_price_eur" class="w-full p-2 border rounded" type="number" step="0.01" />
             </div>
             <div>
-              <label class="block text-gray-700">Selling Price (€):</label>
+              <label class="block text-gray-700">Listen Preis (€):</label>
               <input v-model.number="editablePart.selling_price_eur" class="w-full p-2 border rounded" type="number" step="0.01" />
+            </div>
+            <div>
+              <label class="block text-gray-700">Walter Preis (€):</label>
+              <input v-model.number="editablePart.walter_price_eur" class="w-full p-2 border rounded" type="number" step="0.01" />
             </div>
           </div>
         </div>

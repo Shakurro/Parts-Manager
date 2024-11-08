@@ -5,7 +5,7 @@
       <div v-for="part in displayedParts" :key="part.id" class="border rounded p-4 shadow-sm">
         <h4 class="font-semibold">{{ part.partnumber }}</h4>
         <p class="text-gray-600">{{ part.description }}</p>
-        <p class="text-gray-800">In Stock: {{ part.instock }}</p>
+        <p class="text-gray-800">Verfügbar: {{ part.instock }}</p>
       </div>
     </div>
     <button @click="toggleExpand" class="mt-4 bg-gray-700 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200">
