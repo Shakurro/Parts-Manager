@@ -6,7 +6,7 @@
     <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6 flex flex-col md:flex-row">
       <!-- Sidebar with Search and Filters -->
-      <aside class="w-full md:w-1/4 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4" style="display: inline-block;">
+      <aside class="w-full md:w-1/5 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4" style="display: inline-block;">
         <div>
           <h3 class="text-lg font-bold mb-4">Suche und Filter</h3>
           <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="searchQuery" />
@@ -70,7 +70,7 @@
       </aside>
 
       <!-- Parts List -->
-      <div class="w-full md:w-3/4 bg-white p-6 rounded shadow-md">
+      <div class="w-full md:w-4/5 bg-white p-6 rounded shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold">Teileliste</h2>
         </div>
@@ -79,12 +79,13 @@
             <thead class="bg-gray-800 text-white">
               <tr>
                 <th class="w-1/12 px-4 py-2 text-left">ID</th>
-                <th class="w-2/12 px-4 py-2 text-left">Partnumber</th>
-                <th class="w-4/12 px-4 py-2 text-left">Description</th>
-                <th class="w-1/12 px-4 py-2 text-left">InStock</th>
-                <th class="w-2/12 px-4 py-2 text-left">Buying-Prices</th>
-                <th class="w-2/12 px-4 py-2 text-left">Selling-Prices</th>
-                <th class="w-2/12 px-4 py-2 text-left">Category</th>
+                <th class="w-2/12 px-4 py-2 text-left">Ersatzteil</th>
+                <th class="w-4/12 px-4 py-2 text-left">Beschreibung</th>
+                <th class="w-1/12 px-4 py-2 text-left">Verfügbar</th>
+                <th class="w-1/12 px-4 py-2 text-left">Reihe</th>
+                <th class="w-1/12 px-4 py-2 text-left">Regal</th>
+                <th class="w-1/12 px-4 py-2 text-left">Fach</th>
+                <th class="w-2/12 px-4 py-2 text-left">Kategorie</th>
               </tr>
             </thead>
             <tbody>
@@ -98,8 +99,9 @@
                 <td class="px-4 py-2">{{ part.partnumber }}</td>
                 <td class="px-4 py-2">{{ truncateDescription(part.description) }}</td>
                 <td class="px-4 py-2">{{ part.instock }}</td>
-                <td class="px-4 py-2">{{ part.buying_price_eur }}</td>
-                <td class="px-4 py-2">{{ part.selling_price_eur }}€</td>
+                <td class="px-4 py-2">{{ part.reihe }}</td>
+                <td class="px-4 py-2">{{ part.regal }}</td>
+                <td class="px-4 py-2">{{ part.fach }}</td>
                 <td class="px-4 py-2">{{ getCategoryName(part.category) }}</td>
               </tr>
             </tbody>
@@ -187,7 +189,6 @@ export default {
   },
   computed: {
     filteredParts() {
-      console.log('Selected Categories:', this.selectedCategories);
       return this.parts.filter(part => {
         const matchesSearchQuery = part.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                                    part.partnumber.toLowerCase().includes(this.searchQuery.toLowerCase());
@@ -210,14 +211,15 @@ export default {
   },
   mounted() {
     this.fetchAllItems();
+    console.log('Parts data:', this.parts);
   },
   methods: {
     async fetchAllItems() {
-      let allItems = [];
-      let page = 1;
-      const pageSize = 800; 
-
       try {
+        let allItems = [];
+        let page = 1;
+        const pageSize = 800;
+
         while (true) {
           const response = await axios.get(`http://localhost:1337/items`, {
             params: {
@@ -227,6 +229,8 @@ export default {
           });
 
           const items = response.data;
+          console.log('Fetched items:', items);
+
           if (items.length === 0) {
             break;
           }
@@ -321,6 +325,9 @@ export default {
         return description.substring(0, 20) + '...';
       }
       return description;
+    },
+    formatLocation(part) {
+      return `${part.reihe || ''} ${part.regal || ''} ${part.fach || ''}`.trim();
     }
   },
   watch: {
