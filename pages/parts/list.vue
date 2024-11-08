@@ -90,6 +90,7 @@
                 <th class="w-1/12 px-4 py-2 text-left">InStock</th>
                 <th class="w-2/12 px-4 py-2 text-left">Buying-Prices</th>
                 <th class="w-2/12 px-4 py-2 text-left">Selling-Prices</th>
+                <th class="w-2/12 px-4 py-2 text-left">Category</th>
               </tr>
             </thead>
             <tbody>
@@ -105,6 +106,7 @@
                 <td class="px-4 py-2">{{ part.instock }}</td>
                 <td class="px-4 py-2">{{ part.buying_price_eur }}-€</td>
                 <td class="px-4 py-2">{{ part.selling_price_eur }}€</td>
+                <td class="px-4 py-2">{{ getCategoryName(part.category) }}</td>
               </tr>
             </tbody>
           </table>
@@ -130,23 +132,26 @@
       </div>
     </main>
 
-    <!-- Include Footer Layout -->
+    <!-- Footer Layout -->
     <FooterLayout />
 
-    <!-- Part Detail Popup -->
-    <PartDetailPopup 
-      :visible="isPopupVisible" 
-      :part="selectedPart" 
-      @close="isPopupVisible = false" 
-      @update="updatePart"
-    />
+    <!-- PartDetailPopup with transition -->
+    <transition name="scale">
+      <PartDetailPopup 
+        v-if="isPopupVisible" 
+        :visible="isPopupVisible" 
+        :part="selectedPart" 
+        @close="isPopupVisible = false" 
+        @update="updatePart"
+      />
+    </transition>
 
-    <!-- Notification Popup -->
+    <!-- NotificationPopup -->
     <NotificationPopup 
       :visible="isNotificationVisible" 
       @close="closeNotification"
     />
-
+    <!-- AddPartPopup -->
     <AddPartPopup 
       :visible="isAddPopupVisible" 
       @close="isAddPopupVisible = false" 
@@ -160,8 +165,8 @@ import axios from 'axios';
 import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
 import FooterLayout from '../layouts/admin/FooterLayout.vue';
 import PartDetailPopup from '../components/PartDetailPopup.vue';
-import NotificationPopup from '../components/NotificationPopup.vue'; // Import the component
-import AddPartPopup from '../components/AddPartPopup.vue'; // Import the new component
+import NotificationPopup from '../components/NotificationPopup.vue';
+import AddPartPopup from '../components/AddPartPopup.vue';
 
 export default {
   name: 'Parts',
@@ -183,7 +188,7 @@ export default {
       isPopupVisible: false,
       isNotificationVisible: false,
       selectedPart: null,
-      isAddPopupVisible: false, // New state for add popup visibility
+      isAddPopupVisible: false,
     };
   },
   computed: {
@@ -216,7 +221,7 @@ export default {
     async fetchAllItems() {
       let allItems = [];
       let page = 1;
-      const pageSize = 100; // Anzahl der Einträge pro Anfrage
+      const pageSize = 800; 
 
       try {
         while (true) {
@@ -229,7 +234,7 @@ export default {
 
           const items = response.data;
           if (items.length === 0) {
-            break; // Keine weiteren Eintrge
+            break;
           }
 
           allItems = allItems.concat(items);
@@ -262,7 +267,7 @@ export default {
     async updatePart(updatedPart) {
       const index = this.parts.findIndex(part => part.id === updatedPart.id);
       if (index !== -1) {
-        const originalPart = { ...this.parts[index] }; // Kopie der ursprünglichen Daten
+        const originalPart = { ...this.parts[index] };
 
         try {
           this.parts[index] = updatedPart; // Aktualisierte Daten zuweisen
@@ -275,19 +280,19 @@ export default {
             after_change: JSON.stringify(updatedPart)
           };
 
-          console.log('Logging change:', changeLog); // Protokollierung der Änderungen zur Überprüfung
+          console.log('Logging change:', changeLog);
 
           // Übermitteln der Änderungen an die API
           await axios.post('http://localhost:1337/changes', changeLog);
         } catch (error) {
           console.error('Error logging change:', error.response ? error.response.data : error.message);
           // Rückgängig machen der Änderungen
-          this.parts[index] = originalPart; // Setze die ursprünglichen Daten zurück
+          this.parts[index] = originalPart;
         }
       }
-      this.isPopupVisible = false; // Schließen des Detail-Popups
-      this.isNotificationVisible = true; // Benachrichtigung anzeigen
-      this.fetchAllItems(); // Liste aktualisieren
+      this.isPopupVisible = false;
+      this.isNotificationVisible = true;
+      this.fetchAllItems();
     },
     closeNotification() {
       this.isNotificationVisible = false;
@@ -296,12 +301,26 @@ export default {
       try {
         // Save the new part to the database
         const response = await axios.post('http://localhost:1337/items', newPart);
-        this.parts.push(response.data); // Add the new part to the list
-        this.isAddPopupVisible = false; // Close the popup
-        this.isNotificationVisible = true; // Show notification
+        this.parts.push(response.data);
+        this.isAddPopupVisible = false;
+        this.isNotificationVisible = true; 
       } catch (error) {
         console.error('Error adding part:', error.response ? error.response.data : error.message);
       }
+    },
+    getCategoryName(categoryId) {
+      const categoryMap = {
+        1: 'Aufbau',
+        2: 'Rahmen',
+        3: 'Elektrik',
+        4: 'Motor',
+        5: 'Bremse',
+        6: 'Achse',
+        7: 'Betriebsstoffe',
+        8: 'Schrauben',
+        9: 'Ladeboardwand'
+      };
+      return categoryMap[categoryId] || 'fehlt';
     }
   },
   watch: {
@@ -313,5 +332,4 @@ export default {
 </script>
 
 <style scoped>
-/* Add any additional styles here */
 </style>

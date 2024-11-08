@@ -63,18 +63,16 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('http://localhost:1337/auth/local', {
-          identifier: this.username,
-          password: this.password
+        const response = await axios.get('http://localhost:1337/login', {
+          params: {
+            username: this.username,
+            password: this.password
+          }
         });
 
-        if (response.data.jwt) {
-          const userRoleId = response.data.user.role.id; // Adjust based on your Strapi user model
-          if (userRoleId >= 4) {
-            this.router.push('/app'); // Redirect to app.vue
-          } else {
-            this.router.push('/order/new'); // Redirect to /order/new
-          }
+        if (response.data.success) {
+          sessionStorage.setItem('userSession', JSON.stringify(response.data.session));
+          this.router.push('/order/new');
         } else {
           this.errorMessage = 'Login failed. Please check your credentials.';
         }

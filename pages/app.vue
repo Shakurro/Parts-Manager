@@ -50,6 +50,9 @@
             <p class="text-gray-700">Es wurden im Juni 172 Parts verbaut.</p>
           </div>
         </div>
+
+        <!-- Use the LowQuantityParts component -->
+        <LowQuantityParts />
       </main>
 
       <!-- Include Footer Layout -->
@@ -61,22 +64,19 @@
 <script>
 import HeaderLayout from './layouts/admin/HeaderLayout.vue';
 import FooterLayout from './layouts/admin/FooterLayout.vue';
+import LowQuantityParts from '../components/LowQuantityParts.vue'; // Import the new component
 
 export default {
   name: 'App',
   components: {
     HeaderLayout,
-    FooterLayout
+    FooterLayout,
+    LowQuantityParts // Register the new component
   },
   data() {
     return {
       parts: [],
-      recentOrders: [
-        { id: 1, name: 'Order 101', status: 'Pending' },
-        { id: 2, name: 'Order 102', status: 'Pending' },
-        { id: 3, name: 'Order 103', status: 'Pending' },
-        // Add more orders as needed
-      ]
+      recentOrders: [] // Initialize recentOrders here
     };
   },
   computed: {
@@ -88,14 +88,14 @@ export default {
     }
   },
   mounted() {
-    this.fetchAllParts();
+    this.fetchParts();
   },
   methods: {
-    async fetchAllParts() {
+    async fetchParts() {
       try {
         let allParts = [];
         let page = 1;
-        const pageSize = 100;
+        const pageSize = 800; // Set the limit to 800
 
         while (true) {
           const response = await fetch(`http://localhost:1337/items?_start=${(page - 1) * pageSize}&_limit=${pageSize}`);
@@ -113,7 +113,9 @@ export default {
         }
 
         this.parts = allParts;
-        console.log('Total parts fetched:', allParts.length);
+
+        // Log a summary of the fetched parts
+        console.log(`Total parts fetched: ${this.parts.length}`);
       } catch (error) {
         console.error('Error fetching parts:', error);
       }
