@@ -73,12 +73,6 @@
       <div class="w-full md:w-3/4 bg-white p-6 rounded shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold">Teileliste</h2>
-          <button 
-            class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
-            @click="isAddPopupVisible = true"
-          >
-            Hinzufügen
-          </button>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
