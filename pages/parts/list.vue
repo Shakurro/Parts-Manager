@@ -220,8 +220,16 @@ export default {
         let page = 1;
         const pageSize = 800;
 
+        // Retrieve the JWT token from cookies
+        const jwtToken = document.cookie.split('; ').find(row => row.startsWith('jwtToken=')).split('=')[1];
+
+        // Keine schleife....
         while (true) {
           const response = await axios.get(`http://localhost:1337/items`, {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${jwtToken}` // Include the JWT token in the request headers
+            },
             params: {
               _start: (page - 1) * pageSize,
               _limit: pageSize
@@ -298,7 +306,9 @@ export default {
     async addPart(newPart) {
       try {
         // Save the new part to the database
-        const response = await axios.post('http://localhost:1337/items', newPart);
+        const response = await axios.post('http://localhost:1337/items', newPart, {
+          withCredentials: true
+        });
         this.parts.push(response.data);
         this.isAddPopupVisible = false;
         this.isNotificationVisible = true; 
