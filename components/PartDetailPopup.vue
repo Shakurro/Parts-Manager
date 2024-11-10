@@ -39,7 +39,8 @@
             </div>
             <div>
               <label class="block text-gray-700">Kategorie:</label>
-              <select v-model="editablePart.category_id" class="w-full p-2 border rounded">
+              <select v-model="editablePart.category_id" class="w-full p-2 border rounded" required>
+                <option value="" disabled>Wähle eine Kategorie</option>
                 <option v-for="category in categories" :key="category.id" :value="category.id">
                   {{ category.name }}
                 </option>
@@ -76,67 +77,46 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { usePartsStore } from '../stores/partsStore'; // Importiere den Teile-Store
 
 export default {
   props: {
-    visible: Boolean,
-    part: Object
+    part: Object,
+    categories: {
+      type: Array,
+      default: () => [] // Setze einen Standardwert
+    },
+    visible: Boolean // Definiere visible als Prop
   },
   data() {
     return {
-      editablePart: this.initializeEditablePart(this.part),
-      categories: [
-        { id: 1, name: 'Aufbau' },
-        { id: 2, name: 'Rahmen' },
-        { id: 3, name: 'Elektrik' },
-        { id: 4, name: 'Motor' },
-        { id: 5, name: 'Bremse' },
-        { id: 6, name: 'Achse' },
-        { id: 7, name: 'Betriebsstoffe' },
-        { id: 8, name: 'Schrauben' },
-        { id: 9, name: 'Ladeboardwand' }
-      ]
+      editablePart: { 
+        ...this.part,
+        category_id: this.part.category_id || (this.categories && this.categories.length > 0 ? this.categories[0].id : '') // Initialisiere category_id
+      }
     };
   },
-  watch: {
-    part: {
-      immediate: true,
-      handler(newPart) {
-        this.editablePart = this.initializeEditablePart(newPart);
-      }
-    }
-  },
   methods: {
-    initializeEditablePart(part) {
-      console.log('Part data:', part);
+    async saveChanges() {
+      try {
+        const partsStore = usePartsStore(); // Greife auf den Teile-Store zu
 
-      return {
-        ...part,
-        category_id: part && part.category ? part.category.id : null
-      };
+        // Stelle sicher, dass category_id gesetzt ist
+        if (!this.editablePart.category_id) {
+          throw new Error('category_id is not set');
+        }
+
+        // Rufe die Store-Aktion auf, um die Datenbank und den Store zu aktualisieren
+        await partsStore.updatePartInDatabase(this.editablePart);
+        
+        this.$emit('update', this.editablePart);
+        this.close();
+      } catch (error) {
+        
+      }
     },
     close() {
       this.$emit('close');
-    },
-    async saveChanges() {
-      console.log('saveChanges method called');
-      try {
-        console.log('Saving part with category_id:', this.editablePart.category_id);
-
-        const response = await axios.put(`http://localhost:1337/items/${this.editablePart.id}`, {
-          ...this.editablePart,
-          category: this.editablePart.category_id
-        });
-        console.log('Update successful:', response.data);
-        this.$emit('update', response.data);
-        this.close();
-      } catch (error) {
-        console.error('Error updating part:', error);
-      }
-    },
-    handleButtonClick() {
-      console.log('Button clicked');
     }
   }
 };

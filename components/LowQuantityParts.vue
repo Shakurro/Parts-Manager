@@ -14,55 +14,21 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      lowQuantityParts: [],
-      isExpanded: false
-    };
-  },
-  computed: {
-    displayedParts() {
-      return this.isExpanded ? this.lowQuantityParts : this.lowQuantityParts.slice(0, 6);
-    }
-  },
-  mounted() {
-    this.fetchLowQuantityParts();
-  },
-  methods: {
-    async fetchLowQuantityParts() {
-      try {
-        let allParts = [];
-        let page = 0;
-        const pageSize = 100; // Fetch 100 items per request
+<script setup>
+import { usePartsStore } from '@/stores/partsStore';
+import { computed, ref } from 'vue';
 
-        while (true) {
-          const response = await fetch(`http://localhost:1337/items?_start=${page * pageSize}&_limit=${pageSize}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          allParts = allParts.concat(data);
+const partsStore = usePartsStore();
+const isExpanded = ref(false);
 
-          if (data.length < pageSize) {
-            break; // Exit loop if fewer items than pageSize are returned
-          }
+const displayedParts = computed(() => {
+  const parts = partsStore.lowQuantityParts;
+  return isExpanded.value ? parts : parts.slice(0, 6);
+});
 
-          page++;
-        }
-
-        // Filter parts with instock < 3 and selling_price_eur < 30
-        this.lowQuantityParts = allParts.filter(part => part.instock < 3 && part.selling_price_eur < 30);
-      } catch (error) {
-        console.error('Error fetching parts:', error);
-      }
-    },
-    toggleExpand() {
-      this.isExpanded = !this.isExpanded;
-    }
-  }
-};
+function toggleExpand() {
+  isExpanded.value = !isExpanded.value;
+}
 </script>
 
 <style scoped>

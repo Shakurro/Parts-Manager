@@ -62,67 +62,22 @@
   </NuxtLayout>
 </template>
 
-<script>
+<script setup>
+import { usePartsStore } from '@/stores/partsStore';
 import HeaderLayout from './layouts/admin/HeaderLayout.vue';
 import FooterLayout from './layouts/admin/FooterLayout.vue';
-import LowQuantityParts from '../components/LowQuantityParts.vue'; // Import the new component
+import LowQuantityParts from '../components/LowQuantityParts.vue';
 
-export default {
-  name: 'App',
-  components: {
-    HeaderLayout,
-    FooterLayout,
-    LowQuantityParts // Register the new component
-  },
-  data() {
-    return {
-      parts: [],
-      recentOrders: [] // Initialize recentOrders here
-    };
-  },
-  computed: {
-    totalParts() {
-      return this.parts.length;
-    },
-    totalSellingPrice() {
-      return this.parts.reduce((sum, part) => sum + (part.selling_price_eur || 0), 0).toFixed(2);
-    }
-  },
-  mounted() {
-    this.fetchParts();
-  },
-  methods: {
-    async fetchParts() {
-      try {
-        let allParts = [];
-        let page = 1;
-        const pageSize = 800; // Set the limit to 800
+const partsStore = usePartsStore();
 
-        while (true) {
-          const response = await fetch(`http://localhost:1337/items?_start=${(page - 1) * pageSize}&_limit=${pageSize}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          allParts = allParts.concat(data);
+const totalParts = computed(() => partsStore.totalParts);
+const totalSellingPrice = computed(() => partsStore.totalSellingPrice);
 
-          if (data.length < pageSize) {
-            break; // Exit loop if fewer items than pageSize are returned
-          }
+const recentOrders = ref([]); // Initialize recentOrders here
 
-          page++;
-        }
-
-        this.parts = allParts;
-
-        // Log a summary of the fetched parts
-      } catch (error) {
-        console.error('Error fetching parts:', error);
-      }
-    }
-  },
-
-};
+onMounted(() => {
+  partsStore.fetchAllItems();
+});
 </script>
 
 <style scoped>
