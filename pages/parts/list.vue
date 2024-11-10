@@ -43,7 +43,7 @@
           <h2 class="text-xl font-bold">Teileliste</h2>
           <!-- Timer-Anzeige -->
           <div class="timer">
-            {{ formattedTime }}
+           Aktualisierung in: {{ formattedTime }}
           </div>
         </div>
         <div class="overflow-x-auto">
