@@ -5,5 +5,5 @@ export default defineNuxtConfig({
   pages: true,
   modules: [
     '@nuxtjs/tailwindcss'
-  ]
+  ],
 })

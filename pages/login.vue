@@ -63,16 +63,18 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.get('http://localhost:1337/login', {
-          params: {
-            username: this.username,
-            password: this.password
-          }
+        const response = await axios.post('http://localhost:1337/auth/local', {
+          identifier: this.username,
+          password: this.password
         });
 
-        if (response.data.success) {
-          sessionStorage.setItem('userSession', JSON.stringify(response.data.session));
-          this.router.push('/order/new');
+        if (response.data.jwt) {
+          if (import.meta.client) {
+            sessionStorage.setItem('jwtToken', response.data.jwt);
+            document.cookie = `jwtToken=${response.data.jwt}; path=/;`;
+            console.log('JWT gespeichert:', response.data.jwt);
+          }
+          this.router.push('/app');
         } else {
           this.errorMessage = 'Login failed. Please check your credentials.';
         }

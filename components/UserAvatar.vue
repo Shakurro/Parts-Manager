@@ -43,7 +43,18 @@ export default {
       }
     },
     logout() {
-      console.log('Abmelden');
+      if (process.client) {
+
+        // Entferne den Token aus dem sessionStorage
+        sessionStorage.removeItem('jwtToken');
+
+        // TODO: die Cookies sollen schon nach 12-24 Std. der erstellung ablaufen,
+        // TODO: der Token soll immer überprüft werden.
+        document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+        console.log('JWT gelöscht');
+        this.$router.push('/login');
+      }
     }
   }
 };

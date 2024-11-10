@@ -116,12 +116,12 @@ export default {
         this.parts = allParts;
 
         // Log a summary of the fetched parts
-        console.log(`Total parts fetched: ${this.parts.length}`);
       } catch (error) {
         console.error('Error fetching parts:', error);
       }
     }
-  }
+  },
+
 };
 </script>
 

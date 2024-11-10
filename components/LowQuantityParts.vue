@@ -43,7 +43,6 @@ export default {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
-          console.log(`Fetched batch ${page + 1}:`, data); // Debugging: Log each batch of fetched parts
           allParts = allParts.concat(data);
 
           if (data.length < pageSize) {
@@ -55,7 +54,6 @@ export default {
 
         // Filter parts with instock < 3 and selling_price_eur < 30
         this.lowQuantityParts = allParts.filter(part => part.instock < 3 && part.selling_price_eur < 30);
-        console.log('Low quantity and low price parts:', this.lowQuantityParts); // Debugging: Log low quantity and low price parts
       } catch (error) {
         console.error('Error fetching parts:', error);
       }

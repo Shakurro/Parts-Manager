@@ -42,24 +42,7 @@
                   />
                 </div>
               </div>
-              <!-- weitere Stuff  TODO: Füllen mit sachen-->
-              <div class="bg-gray-300 p-4 rounded mb-4 shadow-sm w-1/2">
-                <label for="password" class="block text-gray-700 font-semibold mb-2">Weitere User Infos TODO:</label>
-                <input
-                  type="text"
-                  id="password"
-                  v-model="settings.newPassword"
-                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <label for="confirmPassword" class="block text-gray-700 font-semibold mb-2 mt-4">Weitere User Infos TODO:</label>
-                <input
-                  type="text"
-                  id="confirmPassword"
-                  v-model="settings.confirmPassword"
-                  class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p v-if="passwordError" class="text-red-500 mt-2">{{ passwordError }}</p>
-              </div>
+              
 
               <!-- Passwort ändern -->
               <div class="bg-gray-300 p-4 rounded mb-4 shadow-sm w-1/2">
