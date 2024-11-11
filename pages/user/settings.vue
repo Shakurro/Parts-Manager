@@ -1,16 +1,13 @@
 <template>
   <NuxtLayout>
     <div class="min-h-screen bg-gray-100 flex flex-col">
-      <!-- Include Header Layout -->
       <HeaderLayout />
 
-      <!-- Main Content -->
       <main class="flex-1 container mx-auto px-4 py-6">
         <div class="bg-white p-6 rounded shadow-md">
           <h2 class="text-2xl font-bold mb-4">Einstellungen</h2>
           <form @submit.prevent="saveSettings">
             <div class="flex space-x-4">
-              <!-- Benutzername, Geburtstag und Rolle -->
               <div class="bg-gray-300 p-4 rounded mb-4 shadow-sm w-1/2 space-y-4">
                 <div>
                   <label for="username" class="block text-gray-700 font-semibold mb-1">Benutzername</label>
@@ -44,7 +41,6 @@
               </div>
               
 
-              <!-- Passwort ändern -->
               <div class="bg-gray-300 p-4 rounded mb-4 shadow-sm w-1/2">
                 <label for="password" class="block text-gray-700 font-semibold mb-2">Neues Passwort</label>
                 <input
@@ -72,7 +68,6 @@
             </div>
 
             <div class="flex space-x-4">
-              <!-- An/Aus-Schalter -->
               <div class="bg-gray-300 p-4 rounded mb-4 shadow-sm w-1/2">
                 <label class="block text-gray-700 font-semibold mb-2">E-Mail Benachrichtigungen</label>
                 <div class="flex items-center">
@@ -90,7 +85,6 @@
                 </div>
               </div>
 
-              <!-- Layout-Optionen -->
               <div class="bg-gray-300 p-4 rounded mb-4 shadow-sm w-1/2">
                 <label class="block text-gray-700 font-semibold mb-2">Layout der Website</label>
                 <select v-model="settings.layout" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -112,7 +106,6 @@
         </div>
       </main>
 
-      <!-- Include Footer Layout -->
       <FooterLayout />
     </div>
   </NuxtLayout>
@@ -131,21 +124,20 @@ export default {
   data() {
     return {
       settings: {
-        username: 'John Doe', // Beispielwert, kann dynamisch gesetzt werden
-        newPassword: '', // Neues Passwortfeld
-        confirmPassword: '', // Passwort bestätigen
-        emailNotifications: true, // Beispielwert für Benachrichtigungen
-        smsNotifications: true, // Beispielwert für Benachrichtigungen
-        pushNotifications: true, // Beispielwert für Benachrichtigungen
-        layout: 'light' // Standardlayout
+        username: 'John Doe',
+        newPassword: '', 
+        confirmPassword: '',
+        emailNotifications: true, // Beispielwert
+        smsNotifications: true, // Beispielwert
+        pushNotifications: true, // Beispielwert
+        layout: 'light' // layout
       },
-      passwordError: '' // Fehlernachricht für Passwort
+      passwordError: ''
     };
   },
   methods: {
     saveSettings() {
       console.log('Einstellungen gespeichert:', this.settings);
-      // Hier können Sie die Logik zum Speichern der Einstellungen implementieren
     },
     changePassword() {
       if (this.settings.newPassword !== this.settings.confirmPassword) {
@@ -153,7 +145,6 @@ export default {
       } else {
         this.passwordError = '';
         console.log('Passwort geändert:', this.settings.newPassword);
-        // Hier können Sie die Logik zum Ändern des Passworts implementieren
       }
     }
   }

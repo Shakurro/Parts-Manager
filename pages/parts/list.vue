@@ -1,17 +1,13 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col">
-    <!-- Include Header Layout -->
     <HeaderLayout />
 
-    <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6 flex flex-col md:flex-row">
-      <!-- Sidebar with Search and Filters -->
       <aside class="w-full md:w-1/5 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4">
         <div>
           <h3 class="text-lg font-bold mb-4">Suche und Filter</h3>
           <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="partsStore.searchQuery" />
           
-          <!-- Container for the category filters -->
           <div class="mb-4">
             <h4 class="text-md font-semibold mb-2">Filter nach Kategorie</h4>
             <div>
@@ -22,10 +18,8 @@
             </div>
           </div>
 
-          <!-- Added space between the two sections -->
           <div class="mb-4"></div>
 
-          <!-- Container for the filter button -->
           <div class="flex justify-between mb-4">
             <button 
               @click="clearFilters"
@@ -37,11 +31,9 @@
         </div>
       </aside>
 
-      <!-- Parts List -->
       <div class="w-full md:w-4/5 bg-white p-6 rounded shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold">Teileliste</h2>
-          <!-- Timer-Anzeige -->
           <div class="timer">
            Aktualisierung in: {{ formattedTime }}
           </div>
@@ -82,10 +74,8 @@
       </div>
     </main>
 
-    <!-- Footer Layout -->
     <FooterLayout />
 
-    <!-- PartDetailPopup with transition -->
     <transition name="scale">
       <PartDetailPopup 
         v-if="isPopupVisible" 
@@ -97,12 +87,12 @@
       />
     </transition>
 
-    <!-- NotificationPopup -->
+
     <NotificationPopup 
       :visible="isNotificationVisible" 
       @close="closeNotification"
     />
-    <!-- AddPartPopup -->
+
     <AddPartPopup 
       :visible="isAddPopupVisible" 
       @close="isAddPopupVisible = false" 
@@ -128,10 +118,9 @@ const isPopupVisible = ref(false);
 const isNotificationVisible = ref(false);
 const selectedPart = ref(null);
 const isAddPopupVisible = ref(false);
-const updateInterval = 300; // 5 Minuten in Sekunden
+const updateInterval = 300; 
 const remainingTime = ref(updateInterval);
 
-// Beispiel: Initialisierung von categories
 const categories = ref([
   { id: 1, name: 'Aufbau' },
   { id: 2, name: 'Rahmen' },

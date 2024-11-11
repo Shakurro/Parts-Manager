@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gradient-to-r from-gray-500 to-gray-700">
-    <!-- Main Content -->
     <div class="flex-1 flex items-center justify-center">
       <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Parts Manager</h2>
@@ -35,7 +34,6 @@
         </form>
       </div>
     </div>
-    <!-- Footer -->
     <FooterLayout />
   </div>
 </template>
