@@ -1,8 +1,6 @@
 <template>
   <NuxtLayout>
     <div class="h-screen bg-gray-100 flex flex-col">
-      <!-- Header Layout -->
-      <HeaderLayout />
 
       <!-- Main Content -->
       <main class="flex-1 container mx-auto px-4 py-6">
@@ -63,23 +61,14 @@
         </div>
       </main>
 
-      <!-- Footer Layout -->
-      <FooterLayout />
     </div>
   </NuxtLayout>
 </template>
 
 <script>
-import HeaderLayout from './layouts/admin/HeaderLayout.vue';
-import FooterLayout from './layouts/admin/FooterLayout.vue';
 import axios from 'axios';
 
 export default {
-  name: 'PartView',
-  components: {
-    HeaderLayout,
-    FooterLayout
-  },
   data() {
     return {
       part: null

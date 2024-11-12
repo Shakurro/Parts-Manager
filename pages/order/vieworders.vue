@@ -1,28 +1,26 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-100">
-    <HeaderLayout />
 
-    <main class="flex-1 container mx-auto w-1/2 px-4 py-6">
-      <div class="bg-white p-6 rounded shadow-md col-span-1">
-        <h3 class="text-lg font-bold mb-4">New Order</h3>
-        <ul>
-          <li>
-            <NuxtLink to="/app">
-              <button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-200">New Order</button>
-            </NuxtLink>
-          </li>
-        </ul>
+    <main class="flex-1 container mx-auto w-fit px-4 py-6">
+      <div class="bg-white p-6 rounded shadow-md col-span-1 flex items-center justify-between">
+        <h1 class="text-lg font-bold mb-4">Workpacks</h1>
+        <NuxtLink to="/">
+          <button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Create new
+          </button>
+        </NuxtLink>
       </div>
 
       <div class="mb-6"></div>
 
       
-      <div class="overflow-y-auto max-h-96">
+      <div class="overflow-y-auto ">
         <ul class="space-y-6">
           <li v-for="i in 10" :key="i" class="bg-white p-6 rounded shadow-md">
             <h3 class="text-xl font-bold mb-2">52500098{{ i.toString().padStart(3, '0') }}</h3>
-            <p>Ersatzteile können hier gebucht werden</p>
-            
             <div style="overflow: auto">
               <n-timeline horizontal>
                 <n-timeline-item content="pending" />
@@ -61,26 +59,11 @@
       </div>
     </main>
    
-    <FooterLayout />
   </div>
 </template>
 
 <script>
-import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
-import FooterLayout from '../layouts/admin/FooterLayout.vue';
 
-export default {
-  name: 'Orders',
-  components: {
-    HeaderLayout,
-    FooterLayout,
-  },
-  methods: {
-    navigateToNewOrder() {
-      this.$router.push({ name: 'NewOrder' });
-    }
-  }
-};
 </script>
 
 <style scoped>

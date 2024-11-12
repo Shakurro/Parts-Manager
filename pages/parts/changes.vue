@@ -1,7 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col">
-    <!-- Include Header Layout -->
-    <HeaderLayout />
 
     <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6">
@@ -28,22 +26,13 @@
       </div>
     </main>
 
-    <!-- Include Footer Layout -->
-    <FooterLayout />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
-import FooterLayout from '../layouts/admin/FooterLayout.vue';
 
 export default {
-  name: 'ChangeLog',
-  components: {
-    HeaderLayout,
-    FooterLayout
-  },
   data() {
     return {
       changes: []

@@ -1,7 +1,5 @@
 <template>
-  <NuxtLayout>
     <div class="min-h-screen bg-gray-100 flex flex-col">
-      <HeaderLayout />
 
       <main class="flex-1 container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -28,7 +26,7 @@
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Active Warenkörbe</h3>
+            <h3 class="text-lg font-bold mb-2">Active Workpacks</h3>
             <p class="text-gray-700">52500098457</p>
             <p class="text-gray-700">52500097584</p>
             <p class="text-gray-700">52500097845</p>
@@ -37,7 +35,7 @@
 
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">News</h3>
-            <p class="text-gray-700">Es wurden weiter 78 Ersatzteile hinzugefügt.</p>
+            <p class="text-gray-700">Es wurden weitere 78 Ersatzteile hinzugefügt.</p>
             <p class="text-gray-700">Die Benutzeroberfläche wurde aktualisiert, um die Navigation zu verbessern.</p>
           </div>
         </div>
@@ -45,16 +43,12 @@
         <LowQuantityParts />
       </main>
 
-      <FooterLayout />
     </div>
-  </NuxtLayout>
 </template>
 
 <script setup>
 import { usePartsStore } from '@/stores/partsStore';
-import HeaderLayout from './layouts/admin/HeaderLayout.vue';
-import FooterLayout from './layouts/admin/FooterLayout.vue';
-import LowQuantityParts from '../components/LowQuantityParts.vue';
+import LowQuantityParts from '../components/parts/LowQuantityParts.vue';
 
 const partsStore = usePartsStore();
 

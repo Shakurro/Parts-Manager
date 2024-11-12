@@ -23,7 +23,7 @@ const isExpanded = ref(false);
 
 const displayedParts = computed(() => {
   const parts = partsStore.lowQuantityParts;
-  return isExpanded.value ? parts : parts.slice(0, 6);
+  return isExpanded.value ? parts : parts.slice(0, 9);
 });
 
 function toggleExpand() {
@@ -32,7 +32,6 @@ function toggleExpand() {
 </script>
 
 <style scoped>
-/* Add any additional styles here */
 .grid {
   display: grid;
 }

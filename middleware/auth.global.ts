@@ -6,7 +6,6 @@
 
         // TODO: 
         // Überprüfung des Token Serverside -> der Token sollte valide sein. 
-        // Ablauf eines Tokeen berücksichtigen. 
      if (import.meta.server) {
        // Server-seitige Überprüfung
        const cookies = useCookie('jwtToken');

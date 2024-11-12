@@ -3,8 +3,9 @@
       <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-white">Parts Manager</h1>
         <nav class="flex space-x-4 items-center ml-auto">
-          <NuxtLink to="/order/new" class="text-gray-300 hover:text-white">New Order</NuxtLink>
-          <NuxtLink to="/order/my" class="text-gray-300 hover:text-white">My Orders</NuxtLink>
+          <NuxtLink to="/" class="text-gray-300 hover:text-white">Home</NuxtLink>
+          <NuxtLink to="/parts/list" class="text-gray-300 hover:text-white">Parts</NuxtLink>
+          <NuxtLink to="/order/vieworders" class="text-gray-300 hover:text-white">Workpacks</NuxtLink>
           <UserAvatar />
         </nav>
       </div>
@@ -12,7 +13,7 @@
   </template>
   
   <script>
-  import UserAvatar from '~/components/UserAvatar.vue';
+  import UserAvatar from '~/components/header/UserAvatar.vue';
   
   export default {
     name: 'HeaderLayout',

@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col">
-    <HeaderLayout />
 
     <main class="flex-1 container mx-auto px-4 py-6 flex flex-col md:flex-row">
       <aside class="w-full md:w-1/5 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4">
@@ -74,8 +73,6 @@
       </div>
     </main>
 
-    <FooterLayout />
-
     <transition name="scale">
       <PartDetailPopup 
         v-if="isPopupVisible" 
@@ -104,16 +101,12 @@
 <script setup>
 import { usePartsStore } from '@/stores/partsStore';
 import { onMounted, onUnmounted, computed, ref } from 'vue';
-import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
-import FooterLayout from '../layouts/admin/FooterLayout.vue';
-import PartDetailPopup from '../components/PartDetailPopup.vue';
-import NotificationPopup from '../components/NotificationPopup.vue';
-import AddPartPopup from '../components/AddPartPopup.vue';
+import PartDetailPopup from '../components/parts/PartDetailPopup.vue';
+import NotificationPopup from '../components/parts/NotificationPopup.vue';
+import AddPartPopup from '../components/parts/AddPartPopup.vue';
 
 const partsStore = usePartsStore();
 
-const searchQuery = ref('');
-const selectedCategories = ref([]);
 const isPopupVisible = ref(false);
 const isNotificationVisible = ref(false);
 const selectedPart = ref(null);

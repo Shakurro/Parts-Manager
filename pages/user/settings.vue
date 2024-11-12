@@ -1,7 +1,6 @@
 <template>
   <NuxtLayout>
     <div class="min-h-screen bg-gray-100 flex flex-col">
-      <HeaderLayout />
 
       <main class="flex-1 container mx-auto px-4 py-6">
         <div class="bg-white p-6 rounded shadow-md">
@@ -106,21 +105,14 @@
         </div>
       </main>
 
-      <FooterLayout />
     </div>
   </NuxtLayout>
 </template>
 
 <script>
-import HeaderLayout from '../layouts/admin/HeaderLayout.vue';
-import FooterLayout from '../layouts/admin/FooterLayout.vue';
 
 export default {
-  name: 'Settings',
-  components: {
-    HeaderLayout,
-    FooterLayout
-  },
+  
   data() {
     return {
       settings: {
