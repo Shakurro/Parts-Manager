@@ -111,7 +111,7 @@ const isPopupVisible = ref(false);
 const isNotificationVisible = ref(false);
 const selectedPart = ref(null);
 const isAddPopupVisible = ref(false);
-const updateInterval = 300; 
+const updateInterval = 30;
 const remainingTime = ref(updateInterval);
 
 const categories = ref([

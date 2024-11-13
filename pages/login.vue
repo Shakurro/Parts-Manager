@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { login } from '@/services/authService';
 
 export default {
   data() {
@@ -58,24 +58,15 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('http://localhost:1337/auth/local', {
-          identifier: this.username,
-          password: this.password
-        });
-
-        if (response.data.jwt) {
-          if (import.meta.client) {
-            sessionStorage.setItem('jwtToken', response.data.jwt);
-            document.cookie = `jwtToken=${response.data.jwt}; path=/;`;
-            console.log('JWT gespeichert:', response.data.jwt);
-          }
+        const jwtToken = await login(this.username, this.password);
+        if (jwtToken) {
           this.router.push('/');
         } else {
           this.errorMessage = 'Login failed. Please check your credentials.';
         }
       } catch (error) {
         console.error('Error during login:', error);
-        this.errorMessage = 'An error occurred. Please try again later.';
+        this.errorMessage = 'Falscher Benutzername oder falsches Passwort';
       }
     }
   }
