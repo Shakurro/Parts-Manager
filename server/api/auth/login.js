@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { username, password } = await readBody(event);
 
   try {
-    const response = await axios.post('http://localhost:1337/auth/local', {
+    const response = await axios.post('http://212.132.77.32:1337/auth/local', {
       identifier: username,
       password: password,
     });

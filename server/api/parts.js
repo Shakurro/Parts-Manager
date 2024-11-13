@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const method = event.node.req.method;
 
   // Base URL der externen API
-  const baseURL = 'http://localhost:1337/items';
+  const baseURL = 'http://212.132.77.32:1337/items';
 
   if (method === 'GET') {
     try {
