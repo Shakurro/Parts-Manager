@@ -86,7 +86,6 @@ export default {
     async fetchPartDetails(id) {
       try {
         const response = await axios.get(`http://localhost:1337/items/${id}`);
-        console.log('API Response:', response.data); // Debugging: Log the API response
         this.part = response.data;
       } catch (error) {
         console.error('Error fetching part details:', error);

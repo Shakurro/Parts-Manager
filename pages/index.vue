@@ -5,25 +5,28 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Parts in Stock</h3>
-            <p class="text-gray-700">Es sind {{ totalParts }} Teile im Lager</p>
+            <p class="text-gray-700">Es sind {{ totalParts }} Ersatzteile im Lager</p>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Aktueller Lagerwert</h3>
-            <p class="text-gray-700">Gesamteinkaufspreis: {{ totalSellingPrice }} €</p>
-            <p class="text-gray-700">Gesamtverkaufspreis: {{ totalBuyingPrice }} €</p>
+            <p class="text-gray-700">Gesamtverkaufspreis: {{ totalSellingPrice }} €</p>
+            <p class="text-gray-700">Gesamteinkaufspreis: {{ totalBuyingPrice }} €</p>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Placeholder</h3>
+            <h3 class="text-lg font-bold mb-2">Roadmap</h3>
             <ul class="text-gray-700">
               
             </ul>
+            <NuxtLink to="/news/roadmap" class="mt-4 inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-green-600">
+              GoTo Roadmap..
+            </NuxtLink>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Active Mechanics</h3>
-            <p class="text-gray-700">12 Mechanics are now active</p>
+            <p class="text-gray-700">3 aktive User</p>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">

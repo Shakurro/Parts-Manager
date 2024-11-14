@@ -2,11 +2,19 @@
   <div class="min-h-screen bg-gray-100 flex flex-col">
 
     <main class="flex-1 container mx-auto px-4 py-6 flex flex-col md:flex-row">
-      <aside class="w-full md:w-1/5 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4">
+      <aside class="w-full md:w-1/5 bg-white p-4 rounded shadow-md mb-4 md:mb-0 md:mr-4 flex flex-col space-y-4 max-h-[550px] overflow-auto">
         <div>
-          <h3 class="text-lg font-bold mb-4">Suche und Filter</h3>
+          <h3 class="text-lg font-bold mb-4">Suche und Scannen</h3>
           <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="partsStore.searchQuery" />
           
+          <button @click="startBarcodeScanner" class="bg-gray-800 text-white py-2 px-4 rounded mb-4 hover:bg-green-600 transition duration-200">
+            Barcode scannen
+          </button>
+
+          <div id="interactive" class="viewport"></div>
+
+          <hr class="border-t border-gray-300 my-4">
+
           <div class="mb-4">
             <h4 class="text-md font-semibold mb-2">Filter nach Kategorie</h4>
             <div>
@@ -104,6 +112,7 @@ import { onMounted, onUnmounted, computed, ref } from 'vue';
 import PartDetailPopup from '../components/parts/PartDetailPopup.vue';
 import NotificationPopup from '../components/parts/NotificationPopup.vue';
 import AddPartPopup from '../components/parts/AddPartPopup.vue';
+import Quagga from 'quagga';
 
 const partsStore = usePartsStore();
 
@@ -197,6 +206,35 @@ const formattedTime = computed(() => {
   const seconds = String(remainingTime.value % 60).padStart(2, '0');
   return `${minutes}:${seconds}`;
 });
+
+function startBarcodeScanner() {
+  Quagga.init({
+    inputStream: {
+      type: "LiveStream",
+      target: document.querySelector('#interactive'),
+      constraints: {
+        width: 640,
+        height: 480,
+        facingMode: "environment" // Rückkamera
+      }
+    },
+    decoder: {
+      readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader"]
+    }
+  }, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    Quagga.start();
+  });
+
+  Quagga.onDetected((result) => {
+    const code = result.codeResult.code;
+    partsStore.value.searchQuery = code; // Setze den Barcode in die Suchleiste
+    Quagga.stop(); // Stoppe den Scanner nach erfolgreicher Erkennung
+  });
+}
 </script>
 
 <style scoped>

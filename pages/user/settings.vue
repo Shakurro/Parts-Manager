@@ -129,14 +129,12 @@ export default {
   },
   methods: {
     saveSettings() {
-      console.log('Einstellungen gespeichert:', this.settings);
     },
     changePassword() {
       if (this.settings.newPassword !== this.settings.confirmPassword) {
         this.passwordError = 'Die Passwörter stimmen nicht überein.';
       } else {
         this.passwordError = '';
-        console.log('Passwort geändert:', this.settings.newPassword);
       }
     }
   }

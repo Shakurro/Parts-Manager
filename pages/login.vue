@@ -42,6 +42,8 @@
 <script>
 import { useRouter } from 'vue-router';
 import { login } from '@/services/authService';
+import { fetchUserData } from '@/services/userService';
+import { userStore } from '@/stores/userStore';
 
 export default {
   data() {
@@ -60,6 +62,9 @@ export default {
       try {
         const jwtToken = await login(this.username, this.password);
         if (jwtToken) {
+          const userData = await fetchUserData(jwtToken);
+          userStore.setUserData(userData);
+
           this.router.push('/');
         } else {
           this.errorMessage = 'Login failed. Please check your credentials.';

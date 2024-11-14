@@ -3,8 +3,9 @@
     <img :src="avatarUrl" alt="User Avatar" class="avatar-image" />
     <div v-if="menuOpen" class="dropdown-menu">
       <ul>
-        <li class="username-branch-display">{{ username }} ({{ branch }})</li>
+        <li class="username-branch-display">{{ fullName }} ({{ branch }})</li>
         <li class="role-display">Rolle: {{ userRole }}</li>
+        <li v-if="isAdmin" @click="navigateToUserPanel">User Panel</li>
         <li v-if="isAdmin" @click="navigateToSettings">Einstellungen</li>
         <li @click="logout">Abmelden</li>
       </ul>
@@ -13,19 +14,33 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { userStore } from '@/stores/userStore'; // Korrigierter Importpfad
+
 export default {
   data() {
     return {
       menuOpen: false,
       avatarUrl: 'https://loremflickr.com/150/150', // UserBild
-      username: 'John Doe', // wird später über Datenbank bezogen
-      userRole: 'Admin', // wird später über Datenbank bezogen
       branch: '0525' // wird später über Datenbank bezogen
     };
   },
   computed: {
+    fullName() {
+      const { first_name, second_name } = userStore.userData || {};
+      return `${first_name || ''} ${second_name || ''}`.trim();
+    },
+    userRole() {
+      const roleMap = {
+        1: 'User',
+        2: 'Manager',
+        3: 'Admin'
+      };
+      const roleId = userStore.userData?.permissions;
+      return roleMap[roleId] || 'Unknown'; // Fallback auf 'Unknown', falls die Rolle nicht definiert ist
+    },
     isAdmin() {
-      return this.userRole.toLowerCase() === 'admin';
+      return this.userRole === 'Admin';
     }
   },
   methods: {
@@ -33,26 +48,31 @@ export default {
       this.menuOpen = !this.menuOpen;
     },
     viewProfile() {
-      console.log('Profil anzeigen');
     },
     navigateToSettings() {
       if (this.isAdmin) {
         this.$router.push('/user/settings');
       } else {
-        console.log('Zugriff verweigert: Nur Admins können die Einstellungen aufrufen.');
+      }
+    },
+    navigateToUserPanel() {
+      if (this.isAdmin) {
+        this.$router.push('/admin/panel');
+      } else {
       }
     },
     logout() {
       if (process.client) {
-
         // Entferne den Token aus dem sessionStorage
         sessionStorage.removeItem('jwtToken');
 
-        // TODO: die Cookies sollen schon nach 12-24 Std. der erstellung ablaufen,
+        // Entferne die Benutzerdaten aus dem userStore und den Cookies
+        userStore.clearUserData();
+
+        // TODO: die Cookies sollen schon nach 12-24 Std. der Erstellung ablaufen,
         // TODO: der Token soll immer überprüft werden.
         document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
-        console.log('JWT gelöscht');
         this.$router.push('/login');
       }
     }
