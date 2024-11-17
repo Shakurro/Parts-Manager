@@ -5,12 +5,16 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Parts in Stock</h3>
-            <p class="text-gray-700">Es sind {{ totalParts }} Ersatzteile im Lager</p>
+            <ul class="text-gray-700">
+              <li>Es sind {{ totalParts }} Ersatzteile im Lager</li>
+            </ul>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Aktueller Lagerwert</h3>
-            <p class="text-gray-700">Gesamtverkaufspreis: {{ totalSellingPrice }} €</p>
+            <ul class="text-gray-700">
+              <li>Gesamtverkaufspreis: {{ totalSellingPrice }} €</li>
+            </ul>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
@@ -19,27 +23,35 @@
               
             </ul>
             <NuxtLink to="/news/roadmap" class="mt-4 inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-green-600">
-              GoTo Roadmap..
+              GoTo Roadmap
             </NuxtLink>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Active Mechanics</h3>
-            <p class="text-gray-700">3 aktive User</p>
+            <ul class="text-gray-700 list-disc pl-5">
+              <li>Mechanic 1</li>
+              <li>Mechanic 2</li>
+              <li>Mechanic 3</li>
+            </ul>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Active Workpacks</h3>
-            <p class="text-gray-700">52500098457</p>
-            <p class="text-gray-700">52500097584</p>
-            <p class="text-gray-700">52500097845</p>
-            <p class="text-gray-700">52500098745</p>
+            <h3 class="text-lg font-bold mb-2">Active Partpacks</h3>
+            <ul class="text-gray-700 list-disc pl-5">
+              <li>52500098457</li>
+              <li>52500097584</li>
+              <li>52500097845</li>
+              <li>52500098745</li>
+            </ul>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">News</h3>
-            <p class="text-gray-700">Es wurden weitere 78 Ersatzteile hinzugefügt.</p>
-            <p class="text-gray-700">Die Benutzeroberfläche wurde aktualisiert, um die Navigation zu verbessern.</p>
+            <ul class="text-gray-700 list-disc pl-5">
+              <li>Die Benutzeroberfläche wurde aktualisiert, um die Navigation zu verbessern.</li>
+              <li>Roadmap 2024/2025 ist nun verfügbar.</li>
+            </ul>
           </div>
         </div>
 

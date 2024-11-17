@@ -6,10 +6,6 @@
         <div>
           <h3 class="text-lg font-bold mb-4">Suche und Scannen</h3>
           <input type="text" placeholder="Suchen..." class="w-full p-2 mb-4 border rounded" v-model="partsStore.searchQuery" />
-          
-          <button @click="startBarcodeScanner" class="bg-gray-800 text-white py-2 px-4 rounded mb-4 hover:bg-green-600 transition duration-200">
-            Barcode scannen
-          </button>
 
           <div id="interactive" class="viewport"></div>
 
@@ -112,7 +108,6 @@ import { onMounted, onUnmounted, computed, ref } from 'vue';
 import PartDetailPopup from '../components/parts/PartDetailPopup.vue';
 import NotificationPopup from '../components/parts/NotificationPopup.vue';
 import AddPartPopup from '../components/parts/AddPartPopup.vue';
-import Quagga from 'quagga';
 
 const partsStore = usePartsStore();
 

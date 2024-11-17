@@ -1,6 +1,6 @@
 <template>
   <div class="content mt-8">
-    <h1 class="text-center text-2xl font-bold mb-8">Parts Manager Roadmap 2024/2025</h1>
+    <h1 class="text-center text-3xl font-extrabold mb-6 text-gray-800">Parts Manager Roadmap 2024/2025</h1>
   </div>
   <div class="timeline relative max-w-4xl mx-auto">
     <!-- Phase 1 -->
@@ -48,8 +48,9 @@
         <ul class="list-disc pl-5">
           <li>Implementierung einer Funktion, mit der Manager Partpacks erstellen und für Mechaniker freigeben können.</li>
           <li>Möglichkeit, Partpacks nach Partpacknummer zu suchen.</li>
+          <NuxtLink to="/order/vieworders" class="text-blue-600 underline hover:text-blue-800">Partpacks Beispiel</NuxtLink>
         </ul>
-      </div>
+      </div>  
       <div class="timeline-marker bg-gray-800"></div>
     </div>
     <div class="phase-container mb-8 flex items-center">

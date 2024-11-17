@@ -5,7 +5,6 @@
         <nav class="flex space-x-4 items-center ml-auto">
           <NuxtLink to="/" class="text-gray-300 hover:text-white">Home</NuxtLink>
           <NuxtLink to="/parts/list" class="text-gray-300 hover:text-white">Parts</NuxtLink>
-          <NuxtLink to="/order/vieworders" class="text-gray-300 hover:text-white">Workpacks</NuxtLink>
           <UserAvatar />
         </nav>
       </div>
