@@ -2,24 +2,24 @@ import { reactive } from 'vue';
 import Cookies from 'js-cookie';
 
 export const userStore = reactive({
-  userData: null,
+ userData: null,
 
-  setUserData(data) {
-    this.userData = data;
-    // Speichere die Benutzerdaten in Cookies
-    Cookies.set('userData', JSON.stringify(data), { expires: 1 }); // 1 Tag
-  },
+ setUserData(data) {
+   this.userData = data;
+    //Speichere die Benutzerdaten in Cookies
+   Cookies.set('userData', JSON.stringify(data), { expires: 1 }); // 1 Tag
+ },
 
-  clearUserData() {
-    this.userData = null;
-    // Entferne die Benutzerdaten aus den Cookies
-    Cookies.remove('userData');
-  },
+clearUserData() {
+   this.userData = null;
+    //Entferne die Benutzerdaten aus den Cookies
+   Cookies.remove('userData');
+},
 
-  loadUserDataFromCookies() {
-    const userData = Cookies.get('userData');
-    if (userData) {
-      this.userData = JSON.parse(userData);
-    }
-  },
+ loadUserDataFromCookies() {
+const userData = Cookies.get('userData');
+   if (userData) {
+     this.userData = JSON.parse(userData);
+   }
+ },
 });

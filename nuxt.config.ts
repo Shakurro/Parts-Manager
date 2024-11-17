@@ -7,9 +7,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss'
   ],
   plugins: [
-    '~/plugins/pinia.js', // Ensure the correct path and extension
     '~/plugins/pinia', // Add Pinia plugin
     '~/plugins/naive-ui'
   ],
-  
 })

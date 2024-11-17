@@ -11,7 +11,6 @@
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Aktueller Lagerwert</h3>
             <p class="text-gray-700">Gesamtverkaufspreis: {{ totalSellingPrice }} €</p>
-            <p class="text-gray-700">Gesamteinkaufspreis: {{ totalBuyingPrice }} €</p>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
@@ -58,7 +57,7 @@ const partsStore = usePartsStore();
 
 const totalParts = computed(() => partsStore.totalParts);
 const totalSellingPrice = computed(() => partsStore.totalSellingPrice);
-const totalBuyingPrice = computed (() => partsStore.totalBuyingPrice);
+
 
 onMounted(() => {
   partsStore.fetchAllItems();
