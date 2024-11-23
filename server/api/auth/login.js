@@ -1,8 +1,4 @@
-// server/api/auth/login.js
-
 import axios from 'axios';
-import { fetchUserData } from '../../../services/userService';
-import { userStore } from '@/stores/userStore';
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody(event);
@@ -16,10 +12,6 @@ export default defineEventHandler(async (event) => {
     if (response.data.jwt) {
       // Erfolgreicher Login, JWT-Token zurückgeben
       const jwt = response.data.jwt;
-      
-      // Fetch user data and store it
-      const userData = await fetchUserData(jwt);
-      userStore.setUserData(userData);
 
       return { jwt };
     } else {
