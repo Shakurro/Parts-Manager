@@ -68,8 +68,9 @@
         </div>
         <!-- Save Button -->
         <form @submit.prevent="saveChanges" class="flex space-x-8">
-          <div class="absolute bottom-4 right-4">
-            <button type="submit" class="bg-gray-800 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition duration-300" :disabled="editablePart.in_progress === 1">
+          <div class="absolute bottom-4 right-4" v-if="userRole >= 2">
+            <button type="submit" class="bg-gray-800 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition duration-300" 
+                    :disabled="editablePart.in_progress === 1">
               Speichern
             </button>
           </div>
@@ -81,6 +82,7 @@
 
 <script>
 import { usePartsStore } from '../stores/partsStore';
+import Cookies from 'js-cookie';
 
 export default {
   props: {
@@ -95,9 +97,21 @@ export default {
     return {
       editablePart: { 
         ...this.part,
-        category_id: this.part.category_id || (this.categories && this.categories.length > 0 ? this.categories[0].id : '')
-      }
+        category_id: this.part.category_id || ''
+      },
+      userRole: parseInt(Cookies.get('role_id') || '0', 10) // Default to 0 if not found
     };
+  },
+  watch: {
+    part: {
+      immediate: true,
+      handler(newPart) {
+        this.editablePart = {
+          ...newPart,
+          category_id: newPart.category_id || ''
+        };
+      }
+    }
   },
   methods: {
     async saveChanges() {

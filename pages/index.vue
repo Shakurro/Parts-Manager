@@ -12,7 +12,7 @@
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Interfacing</h3>
+            <h3 class="text-lg font-bold mb-2">Assigned to Me</h3>
             <ul class="text-gray-700">  
             </ul>
           </div>
