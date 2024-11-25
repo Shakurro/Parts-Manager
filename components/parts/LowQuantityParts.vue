@@ -1,34 +1,31 @@
 <template>
   <div class="bg-white p-6 rounded shadow-md mt-6">
     <h3 class="text-lg font-bold mb-2">Parts with Low Quantity</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="part in displayedParts" :key="part.id" class="border rounded p-4 shadow-sm">
-        <h4 class="font-semibold">{{ part.partnumber }}</h4>
-        <p class="text-gray-600">{{ part.description }}</p>
-        <p class="text-gray-800">Verfügbar: {{ part.instock }}</p>
-      </div>
+    <div class="overflow-y-auto" style="max-height: 400px;">
+      <table class="min-w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-800 text-white">
+            <th class="border border-gray-300 p-2">Part Number</th>
+            <th class="border border-gray-300 p-2">Description</th>
+            <th class="border border-gray-300 p-2">Verfügbar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="part in partsStore.lowQuantityParts" :key="part.id" class="border border-gray-300 hover:bg-gray-50">
+            <td class="border border-gray-300 p-2">{{ part.partnumber }}</td>
+            <td class="border border-gray-300 p-2">{{ part.description }}</td>
+            <td class="border border-gray-300 p-2">{{ part.instock }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <button @click="toggleExpand" class="mt-4 bg-gray-700 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200">
-      {{ isExpanded ? 'Show Less' : 'Show More' }}
-    </button>
   </div>
 </template>
 
 <script setup>
 import { usePartsStore } from '@/stores/partsStore';
-import { computed, ref } from 'vue';
 
 const partsStore = usePartsStore();
-const isExpanded = ref(false);
-
-const displayedParts = computed(() => {
-  const parts = partsStore.lowQuantityParts;
-  return isExpanded.value ? parts : parts.slice(0, 9);
-});
-
-function toggleExpand() {
-  isExpanded.value = !isExpanded.value;
-}
 </script>
 
 <style scoped>

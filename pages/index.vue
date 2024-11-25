@@ -4,16 +4,16 @@
       <main class="flex-1 container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Parts in Stock</h3>
-            <ul class="text-gray-700">
+            <h3 class="text-lg font-bold mb-2">Parts Info</h3>
+            <ul class="text-gray-700 list-disc pl-5">
               <li>Es sind {{ totalParts }} Ersatzteile im Lager</li>
+              <li>Gesamtverkaufspreis: {{ totalSellingPrice }} €</li>
             </ul>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Aktueller Lagerwert</h3>
-            <ul class="text-gray-700">
-              <li>Gesamtverkaufspreis: {{ totalSellingPrice }} €</li>
+            <h3 class="text-lg font-bold mb-2">Interfacing</h3>
+            <ul class="text-gray-700">  
             </ul>
           </div>
 
@@ -30,19 +30,12 @@
           <div class="bg-white p-6 rounded shadow-md">
             <h3 class="text-lg font-bold mb-2">Active Mechanics</h3>
             <ul class="text-gray-700 list-disc pl-5">
-              <li>Mechanic 1</li>
-              <li>Mechanic 2</li>
-              <li>Mechanic 3</li>
             </ul>
           </div>
 
           <div class="bg-white p-6 rounded shadow-md">
-            <h3 class="text-lg font-bold mb-2">Active Partpacks</h3>
+            <h3 class="text-lg font-bold mb-2">Open Partpacks</h3>
             <ul class="text-gray-700 list-disc pl-5">
-              <li>52500098457</li>
-              <li>52500097584</li>
-              <li>52500097845</li>
-              <li>52500098745</li>
             </ul>
           </div>
 
