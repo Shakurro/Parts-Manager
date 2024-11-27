@@ -13,16 +13,16 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div 
                 v-for="partpack in filteredPartpacks" 
-                :key="partpack.number" 
+                :key="partpack.id" 
                 class="relative p-6 bg-white border border-gray-200 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl"
             >
                 <!-- Menge an Ersatzteilen oben rechts -->
                 <div class="absolute top-2 right-2">
-                    <n-badge :value="partpack.quantity" />
+                    <n-badge :value="partpack.partsCount" />
                 </div>
                 <div class="mb-4">
                     <div class="text-lg font-semibold">
-                        <strong>{{ partpack.number }}</strong> 
+                        <strong>{{ partpack.name }}</strong> 
                     </div>
                 </div>
                 <!-- Fortschrittsanzeige -->
@@ -30,7 +30,7 @@
                     <n-progress type="circle" :status="partpack.status" :percentage="partpack.percentage" class="mr-4" />
                     <div class="hidden sm:flex space-x-2">
                         <button 
-                            @click="bookParts(partpack.number)" 
+                            @click="bookParts(partpack.id)" 
                             class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2"
                         >
                             Auswählen
@@ -50,42 +50,42 @@
                     </div>
                 </div>
             </div>
+            <div v-if="filteredPartpacks.length === 0" class="col-span-full text-center text-gray-500">
+                Keine Partpacks gefunden.
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { NProgress, NBadge, NAvatar } from 'naive-ui'; // Importiere die Komponenten
+import { ref, computed, onMounted } from 'vue';
+import { usePartpackStore } from '../stores/partpackStore'; // Relativer Import
+import { NProgress, NBadge } from 'naive-ui'; // Importiere die Komponenten
 
-// Beispiel-Daten für Partpacks mit Status
-const partpacks = ref([
-    { number: '52500012323', quantity: 10, status: 'default', percentage: 58},
-    { number: '52500012324', quantity: 5, status: 'warning', percentage: 100},
-    { number: '52500012325', quantity: 3, status: 'info', percentage: 34},
-    { number: '52500012326', quantity: 1, status: 'error', percentage: 100},
-    // Weitere Partpacks hier hinzufügen
-]);
-
+const partpackStore = usePartpackStore(); // Erstelle eine Instanz des Stores
 const searchQuery = ref('');
 const userRole = ref(1); // Beispiel: Benutzerrolle, setze dies entsprechend deiner Logik
 
+// Lade die Partpack-Daten beim Mounten
+onMounted(async () => {
+    await partpackStore.loadPartpacks(); // Lade die Partpack-Daten
+});
+
 // Gefilterte Partpacks basierend auf der Suchanfrage
 const filteredPartpacks = computed(() => {
-    return partpacks.value.filter(partpack =>
-        partpack.number.includes(searchQuery.value)
+    // Überprüfe, ob partpacks existiert und ein Array ist
+    if (!partpackStore.partpacks || !Array.isArray(partpackStore.partpacks)) {
+        return []; // Rückgabe eines leeren Arrays, wenn partpacks nicht verfügbar ist
+    }
+    
+    return partpackStore.partpacks.filter(partpack =>
+        partpack.name && partpack.name.includes(searchQuery.value) // Suche nach dem Namen
     );
 });
 
 // Funktion zum Buchen von Ersatzteilen
-function bookParts(partpackNumber) {
-    console.log(`Ersatzteile für Partpack ${partpackNumber} buchen`);
-}
-
-// Beispiel-Funktion zur Berechnung des Prozentsatzes
-function calculatePercentage(quantity) {
-    // Hier kannst du die Logik anpassen, um den Prozentsatz basierend auf der Menge zu berechnen
-    return (quantity / 10) * 100; // Beispiel: 10 ist die maximale Menge
+function bookParts(partpackId) {
+    console.log(`Ersatzteile für Partpack ${partpackId} buchen`);
 }
 </script>
 
