@@ -21,12 +21,8 @@
             <span class="font-medium text-gray-700">Partpack-Status:</span>
             <span class="text-gray-900">{{ partpack.status }}</span>
           </div>
-          <div class="flex justify-between">
-            <span class="font-medium text-gray-700">Information:</span>
-            <span class="text-gray-900">{{ partpack.info}}</span>
-          </div>
-        
         </div>
+        <p v-else class="text-red-500 font-semibold">Partpack nicht gefunden.</p>
       </div>
 
       <!-- Mittlerer Container: Alle Teile im Lager -->
@@ -37,13 +33,14 @@
 
       <!-- Rechter Container: Teile im Partpack -->
       <div class="bg-white shadow-lg rounded-lg p-6 h-full container-height">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Teile im Partpack</h2>
-        <ul v-if="partpack?.parts" class="space-y-2">
-          <li v-for="part in partpack.parts" :key="part.id" class="flex justify-between">
-            <span class="text-gray-700">{{ part.name }}</span>
-            <span class="text-gray-900">{{ part.quantity }} Stück</span>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Items im Partpack</h2>
+        <ul v-if="partpack?.items && partpack.items.length > 0" class="space-y-2">
+          <li v-for="item in partpack.items" :key="item.id" class="flex justify-between">
+            <span class="text-gray-700">{{ item.partnumber }}</span>
+            <span class="text-gray-900">{{ item.description }}</span>
           </li>
         </ul>
+        <p v-else class="text-gray-600">Keine Items in diesem Partpack vorhanden.</p>
       </div>
     </div>
   </div>
@@ -65,8 +62,14 @@ const allParts = ref([]);
 onMounted(async () => {
   const partpackName = route.params.name;
   partpack.value = partpackStore.partpacks.find(p => p.name === partpackName);
+  
   await partsStore.fetchAllItems();
   allParts.value = partsStore.parts;
+
+  // Optional: Wenn die Items im Partpack nicht geladen sind, können Sie sie hier setzen
+  if (partpack.value) {
+    partpack.value.items = partpack.value.items || []; // Stellen Sie sicher, dass items existiert
+  }
 });
 </script>
 
