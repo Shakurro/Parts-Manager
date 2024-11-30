@@ -17,11 +17,14 @@ export default {
   },
   computed: {
     filteredParts() {
-      return this.parts.filter(part => {
-        const partNumberMatch = part.partnumber.toLowerCase().includes(this.searchQuery.toLowerCase());
-        const descriptionMatch = part.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-        return partNumberMatch || descriptionMatch;
-      }).slice(0, this.visiblePartsCount);
+      return this.parts
+        .filter(part => {
+          const partNumberMatch = part.partnumber.toLowerCase().includes(this.searchQuery.toLowerCase());
+          const descriptionMatch = part.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+          return partNumberMatch || descriptionMatch;
+        })
+        .sort((a, b) => a.id - b.id)
+        .slice(0, this.visiblePartsCount);
     },
   },
   methods: {

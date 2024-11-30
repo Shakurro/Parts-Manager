@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { computed } from 'vue';
 import { userStore } from '@/stores/userStore'; // Korrigierter Importpfad
 
 export default {

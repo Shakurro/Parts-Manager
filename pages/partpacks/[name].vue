@@ -10,6 +10,10 @@
             <span class="text-gray-900">{{ partpack.name }}</span>
           </div>
           <div class="flex justify-between">
+            <span class="font-medium text-gray-700">Erstellt am:</span>
+            <span class="text-gray-900">{{ formattedCreatedAt }}</span>
+          </div>
+          <div class="flex justify-between">
             <span class="font-medium text-gray-700">Ersatzteilmenge:</span>
             <span class="text-gray-900">{{ partpack.partsCount }}</span>
           </div>
@@ -18,7 +22,11 @@
             <span class="text-gray-900">{{ partpack.Partpack_worth }} EUR</span>
           </div>
           <div class="flex justify-between">
-            <span class="font-medium text-gray-700">Partpack-Status:</span>
+            <span class="font-medium text-gray-700">Updated am:</span>
+            <span class="text-gray-900">{{ formattedUpdatedAt }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-700">Status</span>
             <span class="text-gray-900">{{ partpack.status }}</span>
           </div>
         </div>
@@ -57,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePartpackStore } from '../stores/partpackStore';
 import { usePartsStore } from '../stores/partsStore';
@@ -104,6 +112,18 @@ function removePartFromPartpack(item) {
     }
   }
 }
+
+const formattedCreatedAt = computed(() => {
+  if (!partpack.value.created_at) return '';
+  const date = new Date(partpack.value.created_at);
+  return date.toLocaleDateString(); // Formatiert das Datum in das lokale Datumsformat
+});
+
+const formattedUpdatedAt = computed(() => {
+  if (!partpack.value.updated_at) return '';
+  const date = new Date(partpack.value.updated_at);
+  return date.toLocaleDateString(); // Formatiert das Datum in das lokale Datumsformat
+});
 </script>
 
 <style scoped>
