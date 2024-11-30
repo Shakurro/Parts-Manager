@@ -75,7 +75,7 @@ export default {
             <th class="border border-gray-300 p-2">Part Number</th>
             <th class="border border-gray-300 p-2">Description</th>
             <th class="border border-gray-300 p-2">Quantity</th>
-            <th class="border border-gray-300 p-2" style="width: 120px;">Actions</th>
+            <th class="border border-gray-300 p-2" style="width: 120px;"></th>
           </tr>
         </thead>
         <tbody>

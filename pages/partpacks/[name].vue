@@ -21,8 +21,12 @@
             <span class="font-medium text-gray-700">Partpack-Status:</span>
             <span class="text-gray-900">{{ partpack.status }}</span>
           </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-700">Information:</span>
+            <span class="text-gray-900">{{ partpack.info}}</span>
+          </div>
+        
         </div>
-        <p v-else class="text-red-500 font-semibold">Partpack nicht gefunden.</p>
       </div>
 
       <!-- Mittlerer Container: Alle Teile im Lager -->
@@ -40,7 +44,6 @@
             <span class="text-gray-900">{{ part.quantity }} Stück</span>
           </li>
         </ul>
-        <p v-else class="text-gray-600">Keine Teile in diesem Partpack vorhanden.</p>
       </div>
     </div>
   </div>
