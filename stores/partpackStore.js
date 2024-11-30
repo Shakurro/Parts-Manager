@@ -13,7 +13,8 @@ export const usePartpackStore = defineStore('partpack', {
                 this.partpacks = response.data.map(partpack => ({
                     ...partpack,
                     status: this.getStatusString(partpack.progress), // Setze den Status basierend auf dem Fortschritt
-                    percentage: Number(partpack.percentage) // Stelle sicher, dass percentage ein Number ist
+                    percentage: Number(partpack.percentage), // Stelle sicher, dass percentage ein Number ist
+                    Partpack_worth: this.calculateTotalPrice(partpack.items) // Berechne den Gesamtpreis und füge ihn hinzu
                 }));
                 console.log('Partpacks loaded:', this.partpacks); // Protokolliere die geladenen Partpacks
             } catch (error) {
@@ -27,6 +28,13 @@ export const usePartpackStore = defineStore('partpack', {
             if (progress === 4) return 'warning';
             if (progress === 5) return 'info';
             return 'default'; // Standardwert, falls kein passender Status gefunden wird
+        },
+        calculateTotalPrice(items) {
+            console.log('Items:', items); // Protokolliere die Artikel
+            return items.reduce((total, item) => {
+                console.log('Item:', item); // Protokolliere jedes Item
+                return total + (item.buying_price_eur || 0);
+            }, 0);
         }
     },
 });

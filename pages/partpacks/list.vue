@@ -30,19 +30,17 @@
                     <n-progress type="circle" :status="partpack.status" :percentage="partpack.percentage" class="mr-4" />
                     <div class="hidden sm:flex space-x-2">
                         <button 
-                            @click="bookParts(partpack.id)" 
+                            @click="selectPartpack(partpack.name)" 
                             class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2"
                         >
                             Auswählen
                         </button>
                         <button 
-                            v-if="userRole >= 2" 
                             class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2"
                         >
                             Abrechnen
                         </button>
                         <button 
-                            v-if="userRole >= 3" 
                             class="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2"
                         >
                             Löschen
@@ -61,10 +59,11 @@
 import { ref, computed, onMounted } from 'vue';
 import { usePartpackStore } from '../stores/partpackStore'; // Relativer Import
 import { NProgress, NBadge } from 'naive-ui'; // Importiere die Komponenten
+import { useRouter } from 'vue-router'; // Importiere useRouter
 
 const partpackStore = usePartpackStore(); // Erstelle eine Instanz des Stores
 const searchQuery = ref('');
-const userRole = ref(1); // Beispiel: Benutzerrolle, setze dies entsprechend deiner Logik
+const router = useRouter(); // Erstelle eine Router-Instanz
 
 // Lade die Partpack-Daten beim Mounten
 onMounted(async () => {
@@ -86,6 +85,10 @@ const filteredPartpacks = computed(() => {
 // Funktion zum Buchen von Ersatzteilen
 function bookParts(partpackId) {
     console.log(`Ersatzteile für Partpack ${partpackId} buchen`);
+}
+
+function selectPartpack(partpackName) {
+    router.push(`/partpacks/${partpackName}`); // Weiterleitung zur Partpack-Details-Seite
 }
 </script>
 

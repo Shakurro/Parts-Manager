@@ -68,9 +68,8 @@
         </div>
         <!-- Save Button -->
         <form @submit.prevent="saveChanges" class="flex space-x-8">
-          <div class="absolute bottom-4 right-4" v-if="userRole >= 2">
-            <button type="submit" class="bg-gray-800 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition duration-300" 
-                    :disabled="editablePart.in_progress === 1">
+          <div class="absolute bottom-4 right-4">
+            <button type="submit" class="bg-gray-800 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition duration-300">
               Speichern
             </button>
           </div>
