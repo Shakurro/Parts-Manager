@@ -27,6 +27,8 @@ export default {
   methods: {
     addPart(part) {
       console.log(`Hinzufügen: ${part.partnumber}, Menge: ${part.quantity}`);
+      this.$emit('add-part-to-partpack', { part, quantity: part.quantity });
+      this.$emit('update-instock', { partId: part.id, quantity: part.quantity });
     },
     increaseQuantity(part) {
       part.quantity = (part.quantity || 0) + 1;

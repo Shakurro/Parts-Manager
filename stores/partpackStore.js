@@ -35,6 +35,23 @@ export const usePartpackStore = defineStore('partpack', {
                 console.log('Item:', item); // Protokolliere jedes Item
                 return total + (item.buying_price_eur || 0);
             }, 0);
-        }
+        },
+        addItemToPartpack(partpackName, item) {
+            const partpack = this.partpacks.find(p => p.name === partpackName);
+            if (partpack) {
+                const existingItem = partpack.items.find(i => i.id === item.part.id);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity;
+                } else {
+                    partpack.items.push({ ...item.part, quantity: item.quantity });
+                }
+            }
+        },
+        removeItemFromPartpack(partpackName, itemId) {
+            const partpack = this.partpacks.find(p => p.name === partpackName);
+            if (partpack) {
+                partpack.items = partpack.items.filter(item => item.id !== itemId);
+            }
+        },
     },
 });

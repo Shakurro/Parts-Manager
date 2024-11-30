@@ -28,16 +28,26 @@
       <!-- Mittlerer Container: Alle Teile im Lager -->
       <div class="bg-white shadow-lg rounded-lg p-6 h-full container-height">
         <h2 class="text-xl font-bold text-gray-800 mb-4">Teile im Lager</h2>
-        <PartsList :parts="allParts" />
+        <PartsList 
+          :parts="allParts" 
+          @add-part-to-partpack="handleAddPartToPartpack" 
+          @update-instock="handleUpdateInstock" 
+        />
       </div>
 
       <!-- Rechter Container: Teile im Partpack -->
       <div class="bg-white shadow-lg rounded-lg p-6 h-full container-height">
         <h2 class="text-xl font-bold text-gray-800 mb-4">Items im Partpack</h2>
         <ul v-if="partpack?.items && partpack.items.length > 0" class="space-y-2">
-          <li v-for="item in partpack.items" :key="item.id" class="flex justify-between">
-            <span class="text-gray-700">{{ item.partnumber }}</span>
-            <span class="text-gray-900">{{ item.description }}</span>
+          <li v-for="item in partpack.items" :key="item.id" class="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-gray-100 transition">
+            <div class="flex flex-col">
+              <span class="text-gray-700 font-semibold">{{ item.partnumber }}</span>
+              <span class="text-gray-500 text-sm">{{ item.description }}</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-gray-900 font-bold mr-4">Menge: {{ item.quantity }}</span>
+              <button @click="removePartFromPartpack(item)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Entfernen</button>
+            </div>
           </li>
         </ul>
         <p v-else class="text-gray-600">Keine Items in diesem Partpack vorhanden.</p>
@@ -71,11 +81,60 @@ onMounted(async () => {
     partpack.value.items = partpack.value.items || []; // Stellen Sie sicher, dass items existiert
   }
 });
+
+function handleAddPartToPartpack({ part, quantity }) {
+  if (partpack.value) {
+    partpackStore.addItemToPartpack(partpack.value.name, { part, quantity });
+  }
+}
+
+function handleUpdateInstock({ partId, quantity }) {
+  const part = partsStore.parts.find(p => p.id === partId);
+  if (part) {
+    part.instock = Math.max(0, part.instock - quantity);
+  }
+}
+
+function removePartFromPartpack(item) {
+  if (partpack.value) {
+    partpackStore.removeItemFromPartpack(partpack.value.name, item.id);
+    const part = partsStore.parts.find(p => p.id === item.id);
+    if (part) {
+      part.instock += item.quantity; // Restore the quantity to instock
+    }
+  }
+}
 </script>
 
-<style>
-/* In Ihrer CSS-Datei oder im <style> Block */
+<style scoped>
+/* Additional styles for better aesthetics */
 .container-height {
-  height: 680px; /* Oder eine andere gewünschte Höhe */
+  height: 680px; /* Or another desired height */
+}
+
+ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+}
+
+li {
+  border: 1px solid #e5e7eb; /* Light border for separation */
+  margin-bottom: 8px; /* Space between items */
+}
+
+li:hover {
+  background-color: #f3f4f6; /* Slightly darker background on hover */
+}
+
+.text-gray-700 {
+  color: #374151; /* Darker gray for better contrast */
+}
+
+.text-gray-500 {
+  color: #6b7280; /* Medium gray for descriptions */
+}
+
+.text-gray-900 {
+  color: #111827; /* Darkest gray for emphasis */
 }
 </style>

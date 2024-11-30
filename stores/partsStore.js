@@ -50,6 +50,13 @@ export const usePartsStore = defineStore('parts', {
     updateSelectedCategories(categories) {
       this.selectedCategories = categories;
     },
+
+    updateInstock(partId, quantity) {
+      const part = this.parts.find(p => p.id === partId);
+      if (part) {
+        part.instock = Math.max(0, part.instock - quantity); // Ensure instock doesn't go below 0
+      }
+    },
   },
 
   getters: {
