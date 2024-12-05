@@ -1,6 +1,5 @@
 <template>
     <slot />
-      <Footer />
 </template>
   
   <script>
