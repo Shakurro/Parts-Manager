@@ -82,10 +82,6 @@ const filteredPartpacks = computed(() => {
     );
 });
 
-// Funktion zum Buchen von Ersatzteilen
-function bookParts(partpackId) {
-    console.log(`Ersatzteile für Partpack ${partpackId} buchen`);
-}
 
 function selectPartpack(partpackName) {
     router.push(`/partpacks/${partpackName}`); // Weiterleitung zur Partpack-Details-Seite

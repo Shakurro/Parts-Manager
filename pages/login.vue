@@ -11,7 +11,7 @@
                 type="text"
                 id="username"
                 v-model="username"
-                class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
                 required
               />
             </div>
@@ -21,7 +21,7 @@
                 type="password"
                 id="password"
                 v-model="password"
-                class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-800"
                 required
               />
             </div>
@@ -33,6 +33,9 @@
             </button>
             <p v-if="errorMessage" class="text-red-500 mt-4 text-center">{{ errorMessage }}</p>
           </form>
+          <div class="text-center py-4">
+            <p class="text-gray-800">© Created by Jan Zetzmann</p>
+          </div>
         </div>
       </div>
     </div>
