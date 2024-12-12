@@ -319,9 +319,24 @@ const startEditing = () => {
   editedPart.value = { ...part.value }
 }
 
-const saveChanges = () => {
-  // Hier die Änderungen speichern
-  isEditing.value = false
+const saveChanges = async () => {
+  try {
+    // Bereite die Daten für das Update vor
+    const partToUpdate = {
+      ...editedPart.value,
+      category_id: editedPart.value.category, // Stelle sicher, dass category_id korrekt gesetzt ist
+      id: part.value.id // Stelle sicher, dass die ID mitgegeben wird
+    }
+
+    // Aktualisiere das Teil im Store
+    await partsStore.updatePartInDatabase(partToUpdate)
+    
+    // Beende den Bearbeitungsmodus
+    isEditing.value = false
+  } catch (error) {
+    console.error('Fehler beim Speichern:', error)
+    // Optional: Fehlermeldung für den Benutzer anzeigen
+  }
 }
 
 const cancelEditing = () => {
