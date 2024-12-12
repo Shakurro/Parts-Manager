@@ -69,25 +69,15 @@
                 <td class="px-4 py-2">{{ part.reihe }}</td>
                 <td class="px-4 py-2">{{ part.regal }}</td>
                 <td class="px-4 py-2">{{ part.fach }}</td>
-                <td class="px-4 py-2">{{ getCategoryName(part.category) }}</td>
+                <td class="px-4 py-2">
+                  <CategoryName :category-id="part.category || 0" />
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </main>
-
-    <transition name="scale">
-      <PartDetailPopup 
-        v-if="isPopupVisible" 
-        :visible="isPopupVisible" 
-        :part="selectedPart" 
-        :categories="categories"
-        @close="isPopupVisible = false" 
-        @update="updatePart"
-      />
-    </transition>
-
 
     <NotificationPopup 
       :visible="isNotificationVisible" 
@@ -105,15 +95,14 @@
 <script setup>
 import { usePartsStore } from '@/stores/partsStore';
 import { onMounted, onUnmounted, computed, ref } from 'vue';
-import PartDetailPopup from '../components/parts/PartDetailPopup.vue';
 import NotificationPopup from '../components/parts/NotificationPopup.vue';
 import AddPartPopup from '../components/parts/AddPartPopup.vue';
+import { useRouter } from 'vue-router';
+import CategoryName from '../components/parts/categorys.vue';
 
 const partsStore = usePartsStore();
 
-const isPopupVisible = ref(false);
 const isNotificationVisible = ref(false);
-const selectedPart = ref(null);
 const isAddPopupVisible = ref(false);
 const updateInterval = 30;
 const remainingTime = ref(updateInterval);
@@ -129,6 +118,8 @@ const categories = ref([
   { id: 8, name: 'Schrauben' },
   { id: 9, name: 'Ladeboardwand' }
 ]);
+
+const router = useRouter();
 
 onMounted(() => {
   partsStore.fetchAllItems();
@@ -151,8 +142,7 @@ onMounted(() => {
 });
 
 function viewPart(part) {
-  selectedPart.value = part;
-  isPopupVisible.value = true;
+  router.push(`/store/parts/${part.partnumber}`);
 }
 
 function clearFilters() {
