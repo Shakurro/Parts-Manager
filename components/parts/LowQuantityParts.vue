@@ -11,7 +11,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="part in partsStore.lowQuantityParts" :key="part.id" class="border border-gray-300 hover:bg-gray-50">
+          <tr v-for="part in partsStore.lowQuantityParts" :key="part.id" class="border border-gray-300 hover:bg-gray-200">
             <td class="border border-gray-300 p-2">{{ part.partnumber }}</td>
             <td class="border border-gray-300 p-2">{{ part.description }}</td>
             <td class="border border-gray-300 p-2">{{ part.instock }}</td>

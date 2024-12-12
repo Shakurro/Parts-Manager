@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-100 flex flex-col">
+    <div class="bg-gray-100 flex flex-col">
 
       <main class="flex-1 container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
