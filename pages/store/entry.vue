@@ -4,8 +4,18 @@
     <div class="mb-8">
       <div class="flex justify-between items-center mb-6">
         <div>
-          <h1 class="text-3xl font-bold text-gray-800">Wareneingang Übersicht</h1>
-          <p class="text-gray-600 mt-1">Verwalten Sie hier Ihre Wareneingänge</p>
+          <div class="mb-4">
+            <h1 class="text-3xl font-bold text-gray-800">Wareneingang Übersicht</h1>
+          </div>
+          <button
+          @click="$router.back()"
+          class="bg-white shadow-md rounded-lg px-6 py-3 flex items-center hover:bg-gray-50 transition-colors duration-200"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span class="font-medium">Zurück</span>
+        </button>
         </div>
         <button 
           @click="showNewEntryModal = true" 
