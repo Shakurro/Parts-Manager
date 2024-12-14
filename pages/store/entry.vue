@@ -114,9 +114,7 @@ export default {
     const loadEntries = async () => {
       try {
         await partsEntriesStore.fetchAllEntries();
-        console.log('Parts Entries in Component:', partsEntriesStore.partsEntries); // Logge die Daten in der Komponente
       } catch (error) {
-        console.error('Error loading parts entries:', error);
       }
     };
 

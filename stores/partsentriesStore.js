@@ -10,7 +10,6 @@ export const usePartsEntriesStore = defineStore('partsEntries', {
     async fetchAllEntries() {
       try {
         this.partsEntries = await fetchPartsEntries();
-        console.log('Parts Entries:', this.partsEntries);
       } catch (error) {
       }
     },
