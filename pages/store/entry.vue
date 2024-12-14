@@ -68,30 +68,23 @@
           <thead>
             <tr class="bg-gray-50 border-b border-gray-200">
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Artikelnummer</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Artikelname</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Beschreibung</th>
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Menge</th>
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Lieferant</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Wareneingangsdatum</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold text-gray-600">Aktionen</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Manager</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Erstellt am</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in filteredItems" :key="item.id" class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-              <td class="px-6 py-4 text-sm">{{ item.productnumber }}</td>
-              <td class="px-6 py-4 text-sm font-medium text-gray-800">{{ item.productName }}</td>
+              <td class="px-6 py-4 text-sm">{{ item.partnumber }}</td>
+              <td class="px-6 py-4 text-sm">{{ item.description }}</td>
               <td class="px-6 py-4 text-sm">
-                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">{{ item.quantity }} Stk.</span>
+                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">{{ item.value }} Stk.</span>
               </td>
-              <td class="px-6 py-4 text-sm">{{ item.supplier }}</td>
-              <td class="px-6 py-4 text-sm">{{ formatDate(item.date) }}</td>
-              <td class="px-6 py-4 text-right">
-                <button @click="editItem(item.id)" class="text-blue-600 hover:text-blue-800 mr-3">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button @click="deleteItem(item.id)" class="text-red-600 hover:text-red-800">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
+              <td class="px-6 py-4 text-sm">{{ item.vendor }}</td>
+              <td class="px-6 py-4 text-sm">{{ item.manager }}</td>
+              <td class="px-6 py-4 text-sm">{{ formatDate(item.created_at) }}</td>
             </tr>
           </tbody>
         </table>
@@ -107,25 +100,41 @@
 </template>
 
 <script>
-import NewEntryModal from '~/components/entry/NewEntryModal.vue'
+import { usePartsEntriesStore } from '~/stores/partsentriesStore';
+import NewEntryModal from '~/components/entry/NewEntryModal.vue';
 
 export default {
   components: {
     NewEntryModal
   },
+  setup() {
+    const partsEntriesStore = usePartsEntriesStore();
+
+    // Verwende async/await, um sicherzustellen, dass die Daten vollständig geladen werden
+    const loadEntries = async () => {
+      try {
+        await partsEntriesStore.fetchAllEntries();
+        console.log('Parts Entries in Component:', partsEntriesStore.partsEntries); // Logge die Daten in der Komponente
+      } catch (error) {
+        console.error('Error loading parts entries:', error);
+      }
+    };
+
+    // Lade die Einträge beim Setup
+    loadEntries();
+
+    return {
+      partsEntries: partsEntriesStore.partsEntries,
+    };
+  },
   data() {
     // Berechne Start- und Enddatum des aktuellen Monats
-    const today = new Date()
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
     return {
       showNewEntryModal: false,
-      incomingItems: [
-        { id: 1, productnumber:'0123456789', productName: 'Laptop', quantity: 15, supplier: 'TechCo', date: '2024-12-05' },
-        { id: 2, productName: 'Tastatur', quantity: 50, supplier: 'ComTech', date: '2024-12-07' },
-        { id: 3, productName: 'Monitor', quantity: 30, supplier: 'VisionSupplies', date: '2024-12-08' },
-      ],
       filters: {
         search: '',
         supplier: '',
@@ -136,21 +145,21 @@ export default {
   },
   computed: {
     uniqueSuppliers() {
-      return [...new Set(this.incomingItems.map(item => item.supplier))];
+      return [...new Set(this.partsEntries.map(item => item.vendor))];
     },
     filteredItems() {
-      return this.incomingItems.filter(item => {
+      return this.partsEntries.filter(item => {
         // Suchtextfilter
         const searchMatch = !this.filters.search || 
-          item.productName.toLowerCase().includes(this.filters.search.toLowerCase()) ||
-          item.productnumber?.toLowerCase().includes(this.filters.search.toLowerCase());
+          item.description.toLowerCase().includes(this.filters.search.toLowerCase()) ||
+          item.partnumber?.toLowerCase().includes(this.filters.search.toLowerCase());
 
         // Lieferantenfilter
         const supplierMatch = !this.filters.supplier || 
-          item.supplier === this.filters.supplier;
+          item.vendor === this.filters.supplier;
 
         // Datumsfilter
-        const itemDate = new Date(item.date);
+        const itemDate = new Date(item.importdate);
         const dateFromMatch = !this.filters.dateFrom || 
           itemDate >= new Date(this.filters.dateFrom);
         const dateToMatch = !this.filters.dateTo || 
@@ -161,12 +170,9 @@ export default {
     }
   },
   methods: {
-    editItem(id) {
-      console.log(`Bearbeiten von Artikel mit ID: ${id}`);
-    },
     deleteItem(id) {
       console.log(`Löschen von Artikel mit ID: ${id}`);
-      this.incomingItems = this.incomingItems.filter(item => item.id !== id);
+      this.partsEntries = this.partsEntries.filter(item => item.id !== id);
     },
     formatDate(dateString) {
       return new Date(dateString).toLocaleDateString('de-DE', {
@@ -177,8 +183,8 @@ export default {
     },
     handleNewEntry(newEntry) {
       // Generate a new ID (in production, this would typically come from the backend)
-      const newId = Math.max(...this.incomingItems.map(item => item.id)) + 1;
-      this.incomingItems.unshift({
+      const newId = Math.max(...this.partsEntries.map(item => item.id)) + 1;
+      this.partsEntries.unshift({
         id: newId,
         ...newEntry
       });
@@ -186,12 +192,12 @@ export default {
     },
     // Neue Methode zum Zurücksetzen der Filter auf den aktuellen Monat
     resetDateFilters() {
-      const today = new Date()
-      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+      const today = new Date();
+      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
       
-      this.filters.dateFrom = firstDayOfMonth.toISOString().split('T')[0]
-      this.filters.dateTo = lastDayOfMonth.toISOString().split('T')[0]
+      this.filters.dateFrom = firstDayOfMonth.toISOString().split('T')[0];
+      this.filters.dateTo = lastDayOfMonth.toISOString().split('T')[0];
     }
   }
 };
