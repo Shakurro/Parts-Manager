@@ -12,6 +12,7 @@
     "axios": "^1.7.7",
     "chart.js": "^4.4.6",
     "element-plus": "^2.8.8",
+    "html5-qrcode": "^2.3.8",
     "js-cookie": "^3.0.5",
     "naive-ui": "^2.40.1",
     "nuxt": "^3.14.1592",

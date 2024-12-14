@@ -17,10 +17,14 @@
               <label class="block text-sm font-medium text-gray-600">Artikelnummer</label>
               <input
                 v-model="form.productnumber"
+                @blur="fetchPartDescription"
                 type="text"
                 required
                 class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
+              <button type="button" @click="startScanner" class="mt-2 text-indigo-600 hover:underline">
+                Barcode scannen
+              </button>
             </div>
 
             <div>
@@ -105,13 +109,17 @@
             </button>
           </div>
         </form>
+        <!-- Video Element for Barcode Scanning -->
+        <div v-show="scanning" id="reader" style="width: 100%;"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { userStore } from '@/stores/userStore'; // Beispiel für Vuex
+import { Html5Qrcode } from "html5-qrcode";
+import { userStore } from '@/stores/userStore'; // Import des userStore
+import { usePartsStore } from '@/stores/partsStore'; // Import des partsStore
 
 export default {
   data() {
@@ -122,7 +130,9 @@ export default {
         quantity: 1,
         supplier: '',
         date: new Date().toISOString().split('T')[0]
-      }
+      },
+      scanning: false,
+      html5QrCode: null
     }
   },
   computed: {
@@ -141,6 +151,49 @@ export default {
     decrementQuantity() {
       if (this.form.quantity > 1) {
         this.form.quantity--;
+      }
+    },
+    startScanner() {
+      try {
+        this.scanning = true;
+        this.html5QrCode = new Html5Qrcode("reader");
+        this.html5QrCode.start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: 250
+          },
+          (decodedText, decodedResult) => {
+            console.log("Barcode decoded:", decodedText);
+            this.form.productnumber = decodedText;
+            this.fetchPartDescription(); // Beschreibung nach dem Scannen abrufen
+            this.stopScanner();
+          },
+          (errorMessage) => {
+          }
+        ).catch((err) => {
+          console.error("Unable to start scanning.", err);
+        });
+      } catch (error) {
+        console.error("Error in startScanner method:", error);
+      }
+    },
+    stopScanner() {
+      if (this.html5QrCode) {
+        this.html5QrCode.stop().then(() => {
+          this.scanning = false;
+        }).catch((err) => {
+          console.error("Unable to stop scanning.", err);
+        });
+      }
+    },
+    fetchPartDescription() {
+      const partsStore = usePartsStore();
+      const part = partsStore.parts.find(part => part.partnumber === this.form.productnumber);
+      if (part) {
+        this.form.productName = part.description;
+      } else {
+        console.warn("Part not found for number:", this.form.productnumber);
       }
     }
   }
