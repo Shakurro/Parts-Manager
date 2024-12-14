@@ -19,7 +19,7 @@
         </div>
         <button 
           @click="showNewEntryModal = true" 
-          class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+          class="px-6 py-2.5 bg-gray-800 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2 shadow-sm"
         >
           <i class="fas fa-plus"></i>
           Neuer Wareneingang
@@ -175,6 +175,17 @@ export default {
 
         return searchMatch && supplierMatch && dateFromMatch && dateToMatch;
       });
+    }
+  },
+  watch: {
+    'filters.search': function(newVal) {
+      const matchingPart = this.partsEntries.find(item => item.partnumber === newVal);
+      if (matchingPart) {
+        // Assuming you have a data property to hold the description
+        this.filters.description = matchingPart.description;
+      } else {
+        this.filters.description = ''; // Clear description if no match
+      }
     }
   },
   methods: {

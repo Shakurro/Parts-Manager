@@ -3,10 +3,41 @@
     <div class="max-w-6xl mx-auto">
       
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+
+        <NuxtLink
+          v-if="userStore.isManager()"
+          id="container1"
+          to="/partpacks/list"
+          class="w-full max-w-sm bg-white hover:bg-blue-50 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
+        >
+          <div class="p-3 bg-blue-100 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-700">Partpacks</h2>
+        </NuxtLink>
+
+         <!-- Dashboard - Für Manager-->
+         <NuxtLink
+          v-if="userStore.isAdmin()"  
+          id="container1"
+          to="/"
+          class="w-full max-w-sm bg-white hover:bg-blue-50 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
+        >
+          <div class="p-3 bg-blue-100 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13H5v-2h14v2z" />
+              <path d="M7 10l5 5 5-5H7z" />
+              <path d="M21 3H3v10h18V3zm-1 4H4v4h16v-4z" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-700">Dashboard</h2>
+        </NuxtLink>
         
         <!-- Ersatzteile - Für alle Benutzer -->
         <NuxtLink
-          v-if="userStore.userData"
+          v-if="userStore.isManager()"
           id="container1"
           to="/store/parts/list"
           class="w-full max-w-sm bg-white hover:bg-blue-50 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
@@ -92,6 +123,21 @@
             </svg>
           </div>
           <h2 class="text-xl font-semibold text-gray-700">Rechnungen</h2>
+        </NuxtLink>
+
+        <!-- Low Quantity Parts - Nur für Manager und Admin --> 
+        <NuxtLink
+          v-if="userStore.isManager() || userStore.isAdmin()"
+          id="container7"
+          to="/store/parts/lowquantity"
+          class="w-full max-w-sm bg-white hover:bg-orange-50 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
+        >
+          <div class="p-3 bg-orange-100 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18v18H3V3z" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-700">Low Quantity Parts</h2>
         </NuxtLink>
       </div>
     </div>

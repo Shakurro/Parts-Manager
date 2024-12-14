@@ -152,7 +152,14 @@ export default {
       }
     },
     openScanner() {
-      this.$emit('openScanner');
+      console.log("Opening scanner...");
+      this.showScanner = true;
+      console.log("showScanner:", this.showScanner);
+    },
+    handleScanned(decodedText) {
+      this.form.productnumber = decodedText;
+      this.fetchPartDescription();
+      this.showScanner = false;
     },
     fetchPartDescription() {
       const partsStore = usePartsStore();

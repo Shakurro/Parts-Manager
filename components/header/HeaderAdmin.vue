@@ -3,9 +3,6 @@
       <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-white">Parts Manager</h1>
         <nav class="flex space-x-4 items-center ml-auto">
-          <NuxtLink to="/" class="text-gray-300 hover:text-white">Home</NuxtLink>
-          <NuxtLink to="/store" class="text-gray-300 hover:text-white">Store</NuxtLink>
-          <NuxtLink to="/partpacks/list" class="text-gray-300 hover:text-white">Partpacks</NuxtLink>
           <UserAvatar />
         </nav>
       </div>

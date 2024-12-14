@@ -1,5 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-100 p-8">
+     <button
+        @click="$router.back()"
+        class="bg-white shadow-md rounded-lg px-6 py-3 flex items-center hover:bg-gray-50 transition-colors duration-200 mb-4"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span class="font-medium">Zurück</span>
+      </button>   
     <div class="grid grid-cols-1 md:grid-cols-[1fr_2fr_2fr] gap-6">
       <!-- Linker Container: Partpack-Informationen -->
       <div class="bg-white shadow-lg rounded-lg p-6" style="height: 380px;">
