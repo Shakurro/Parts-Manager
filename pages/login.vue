@@ -68,7 +68,7 @@ export default {
           const userData = await fetchUserData(jwtToken);
           userStore.setUserData(userData);
 
-          this.router.push('/');
+          this.router.push('/store');
         } else {
           this.errorMessage = 'Login failed. Please check your credentials.';
         }

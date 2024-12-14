@@ -22,7 +22,7 @@
                 required
                 class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
-              <button type="button" @click="startScanner" class="mt-2 text-indigo-600 hover:underline">
+              <button type="button" @click="openScanner" class="mt-2 text-indigo-600 hover:underline">
                 Barcode scannen
               </button>
             </div>
@@ -109,8 +109,6 @@
             </button>
           </div>
         </form>
-        <!-- Video Element for Barcode Scanning -->
-        <div v-show="scanning" id="reader" style="width: 100%;"></div>
       </div>
     </div>
   </div>
@@ -153,39 +151,8 @@ export default {
         this.form.quantity--;
       }
     },
-    startScanner() {
-      try {
-        this.scanning = true;
-        this.html5QrCode = new Html5Qrcode("reader");
-        this.html5QrCode.start(
-          { facingMode: "environment" },
-          {
-            fps: 10,
-            qrbox: 250
-          },
-          (decodedText, decodedResult) => {
-            console.log("Barcode decoded:", decodedText);
-            this.form.productnumber = decodedText;
-            this.fetchPartDescription(); // Beschreibung nach dem Scannen abrufen
-            this.stopScanner();
-          },
-          (errorMessage) => {
-          }
-        ).catch((err) => {
-          console.error("Unable to start scanning.", err);
-        });
-      } catch (error) {
-        console.error("Error in startScanner method:", error);
-      }
-    },
-    stopScanner() {
-      if (this.html5QrCode) {
-        this.html5QrCode.stop().then(() => {
-          this.scanning = false;
-        }).catch((err) => {
-          console.error("Unable to stop scanning.", err);
-        });
-      }
+    openScanner() {
+      this.$emit('openScanner');
     },
     fetchPartDescription() {
       const partsStore = usePartsStore();
