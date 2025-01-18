@@ -1,8 +1,20 @@
 <template>
   <div class="news-container min-h-screen bg-gray-100 py-12 px-4">
+    
     <div class="max-w-6xl mx-auto">
       <h1 class="text-3xl font-bold text-center mb-8">News & Patch Notes</h1>
       
+      <div class="mb-4">
+          <button
+          @click="$router.back()"
+          class="bg-white shadow-md rounded-lg px-6 py-3 flex items-center hover:bg-gray-50 transition-colors duration-200"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span class="font-medium">Zurück</span>
+        </button>
+      </div>
       <!-- Nachrichtenartikel -->
       <div class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">News</h2>
