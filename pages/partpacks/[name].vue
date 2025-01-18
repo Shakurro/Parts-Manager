@@ -9,9 +9,9 @@
         </svg>
         <span class="font-medium">Zurück</span>
       </button>   
-    <div class="grid grid-cols-1 md:grid-cols-[1fr_2fr_2fr] gap-6">
+    <div :class="gridClass">
       <!-- Linker Container: Partpack-Informationen -->
-      <div class="bg-white shadow-lg rounded-lg p-6" style="height: 380px;">
+      <div v-if="!isWideScreen" class="bg-white shadow-lg rounded-lg p-6" style="height: 380px;">
         <h2 class="text-xl font-bold text-gray-800 mb-4">Partpack-Details</h2>
         <div v-if="partpack" class="space-y-2">
           <div class="flex justify-between">
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePartpackStore } from '../stores/partpackStore';
 import { usePartsStore } from '../stores/partsStore';
@@ -85,6 +85,7 @@ const partpackStore = usePartpackStore();
 const partsStore = usePartsStore();
 const partpack = ref(null);
 const allParts = ref([]);
+const isWideScreen = ref(false);
 
 onMounted(async () => {
   const partpackName = route.params.name;
@@ -97,6 +98,18 @@ onMounted(async () => {
   if (partpack.value) {
     partpack.value.items = partpack.value.items || []; // Stellen Sie sicher, dass items existiert
   }
+
+  const updateScreenWidth = () => {
+    isWideScreen.value = window.innerWidth < 1650;
+  };
+
+  updateScreenWidth();
+  window.addEventListener('resize', updateScreenWidth);
+
+  // Clean up the event listener when the component is unmounted
+  onUnmounted(() => {
+    window.removeEventListener('resize', updateScreenWidth);
+  });
 });
 
 function handleAddPartToPartpack({ part, quantity }) {
@@ -133,13 +146,17 @@ const formattedUpdatedAt = computed(() => {
   const date = new Date(partpack.value.updated_at);
   return date.toLocaleDateString(); // Formatiert das Datum in das lokale Datumsformat
 });
+
+const gridClass = computed(() => {
+  return isWideScreen.value 
+    ? 'grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6' // Zwei gleich breite Spalten bei großem Bildschirm
+    : 'grid grid-cols-1 md:grid-cols-[1fr_4fr_3fr] gap-6'; // Standardbreite
+});
 </script>
 
 <style scoped>
 /* Additional styles for better aesthetics */
-.container-height {
-  height: 680px; /* Or another desired height */
-}
+
 
 ul {
   list-style-type: none; /* Remove default list styling */
