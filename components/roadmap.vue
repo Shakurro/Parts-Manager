@@ -48,7 +48,6 @@
         <ul class="list-disc pl-5">
           <li>Implementierung einer Funktion, mit der Manager Partpacks erstellen und für Mechaniker freigeben können.</li>
           <li>Möglichkeit, Partpacks nach Partpacknummer zu suchen.</li>
-          <NuxtLink to="/order/vieworders" class="text-blue-600 underline hover:text-blue-800">Partpacks Beispiel</NuxtLink>
         </ul>
       </div>  
       <div class="timeline-marker bg-gray-800"></div>

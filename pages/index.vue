@@ -29,9 +29,7 @@
           <h3 class="text-lg font-bold mb-2">Roadmap</h3>
           <ul class="text-gray-700">
           </ul>
-          <NuxtLink to="/news/roadmap" class="mt-4 inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-green-600">
-            GoTo Roadmap
-          </NuxtLink>
+         
         </div>
 
         <div class="bg-white p-6 rounded shadow-md">

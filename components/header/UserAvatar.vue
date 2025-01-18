@@ -24,6 +24,12 @@ export default {
       branch: '0525' // wird später über Datenbank bezogen
     };
   },
+  mounted() {
+    document.addEventListener('click', this.handleOutsideClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.handleOutsideClick);
+  },
   computed: {
     fullName() {
       const { first_name, second_name } = userStore.userData || {};
@@ -45,6 +51,11 @@ export default {
   methods: {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
+    },
+    handleOutsideClick(event) {
+      if (this.menuOpen && !this.$el.contains(event.target)) {
+        this.menuOpen = false;
+      }
     },
     viewProfile() {
     },
@@ -96,11 +107,13 @@ export default {
   position: absolute;
   top: 60px;
   right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  width: 150px;
+  width: 180px;
+  border-radius: 8px;
+  padding: 10px 0;
 }
 
 .dropdown-menu ul {
@@ -110,25 +123,27 @@ export default {
 }
 
 .dropdown-menu li {
-  padding: 10px;
+  padding: 12px 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .dropdown-menu li:hover {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
 }
 
 .username-branch-display,
 .role-display {
   font-weight: bold;
   color: #333;
-  margin-bottom: 5px;
-  font-size: 0.875rem; /* Kleinere Schriftgröße */
-  cursor: default; /* Kein Zeiger-Cursor */
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  cursor: default;
 }
 
 .role-display {
-  border-bottom: 1px solid #ccc;
-  font-size: 0.75rem; /* Noch kleinere Schriftgröße */
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.75rem;
+  padding-bottom: 8px;
 }
 </style>
