@@ -17,17 +17,21 @@
       <!-- Hauptinhalt mit angepasster Größe -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <!-- Bildbereich (kleiner skaliert) -->
-        <div class="lg:col-span-3 bg-white rounded-lg shadow p-4">
-          <div class="aspect-square bg-gray-200 rounded-lg flex items-center justify-center mb-3">
+        <div class="lg:col-span-3 bg-white rounded-lg shadow p-4" style="height: 400px;">
+          <div class="aspect-square bg-gray-200 rounded-lg flex items-center justify-center mb-3" style="height: 100px; max-height: 500px;">
             <img 
               v-if="part.image" 
               :src="part.image" 
               :alt="part.name"
-              class="max-w-full max-h-full object-contain"
+              class="w-full h-full object-contain"
+              style="max-height: 500px;"
             >
-            <span v-else class="text-gray-400">
-              Kein Bild verfügbar
-            </span>
+            <img 
+              v-else 
+              alt="Beispielbild"
+              class="w-full h-full object-contain"
+              style="max-height: 500px;"
+            >
           </div>
           <button class="w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700 text-sm">
             Bild hochladen
@@ -35,7 +39,9 @@
         </div>
 
         <!-- Basis Informationen (unverändert) -->
+         
         <div class="lg:col-span-4 bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Basis Informationen</h2>
           <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">{{ part.name }}</h1>
             <div class="flex items-center">
