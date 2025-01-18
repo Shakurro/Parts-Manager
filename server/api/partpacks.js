@@ -3,7 +3,7 @@ import { defineEventHandler, getCookie } from 'h3';
 import axios from 'axios'; // Importiere axios
 
 export default defineEventHandler(async (event) => {
-    const baseURL = 'http://212.132.77.32:1337/partpacks'; // Externe API-URL
+    const baseURL = 'https://backend.jzetzmann.com/partpacks'; // Externe API-URL
     const jwtToken = getCookie(event, 'jwtToken'); // Hole den JWT-Token aus den Cookies
 
     if (!jwtToken) {

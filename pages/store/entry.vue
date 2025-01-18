@@ -120,7 +120,6 @@ export default {
   setup() {
     const partsEntriesStore = usePartsEntriesStore();
 
-    // Verwende async/await, um sicherzustellen, dass die Daten vollständig geladen werden
     const loadEntries = async () => {
       try {
         await partsEntriesStore.fetchAllEntries();
@@ -136,7 +135,7 @@ export default {
     };
   },
   data() {
-    // Berechne Start- und Enddatum des aktuellen Monats
+
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -157,16 +156,14 @@ export default {
     },
     filteredItems() {
       return this.partsEntries.filter(item => {
-        // Suchtextfilter
+
         const searchMatch = !this.filters.search || 
           item.description.toLowerCase().includes(this.filters.search.toLowerCase()) ||
           item.partnumber?.toLowerCase().includes(this.filters.search.toLowerCase());
 
-        // Lieferantenfilter
         const supplierMatch = !this.filters.supplier || 
           item.vendor === this.filters.supplier;
 
-        // Datumsfilter
         const itemDate = new Date(item.importdate);
         const dateFromMatch = !this.filters.dateFrom || 
           itemDate >= new Date(this.filters.dateFrom);
@@ -181,10 +178,10 @@ export default {
     'filters.search': function(newVal) {
       const matchingPart = this.partsEntries.find(item => item.partnumber === newVal);
       if (matchingPart) {
-        // Assuming you have a data property to hold the description
+
         this.filters.description = matchingPart.description;
       } else {
-        this.filters.description = ''; // Clear description if no match
+        this.filters.description = '';
       }
     }
   },
@@ -201,7 +198,7 @@ export default {
       });
     },
     handleNewEntry(newEntry) {
-      // Generate a new ID (in production, this would typically come from the backend)
+
       const newId = Math.max(...this.partsEntries.map(item => item.id)) + 1;
       this.partsEntries.unshift({
         id: newId,
@@ -209,7 +206,7 @@ export default {
       });
       this.showNewEntryModal = false;
     },
-    // Neue Methode zum Zurücksetzen der Filter auf den aktuellen Monat
+
     resetDateFilters() {
       const today = new Date();
       const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -223,6 +220,6 @@ export default {
 </script>
 
 <style scoped>
-/* Optional: Füge benutzerdefinierte Stile hinzu, falls gewünscht */
+
 </style>
   

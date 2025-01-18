@@ -115,61 +115,61 @@
 </template>
 
 <script>
-import { Html5Qrcode } from "html5-qrcode";
-import { userStore } from '@/stores/userStore'; // Import des userStore
-import { usePartsStore } from '@/stores/partsStore'; // Import des partsStore
+import { ref, computed } from 'vue';
+import { userStore } from '@/stores/userStore';
 
 export default {
-  data() {
-    return {
-      form: {
-        productnumber: '',
-        productName: '',
-        quantity: 1,
-        supplier: '',
-        date: new Date().toISOString().split('T')[0]
-      },
-      scanning: false,
-      html5QrCode: null
-    }
-  },
-  computed: {
-    fullName() {
+  setup() {
+    const form = ref({
+      productnumber: '',
+      productName: '',
+      quantity: 1,
+      supplier: '',
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    const fullName = computed(() => {
       const { first_name, second_name } = userStore.userData || {};
       return `${first_name || ''} ${second_name || ''}`.trim();
-    }
-  },
-  methods: {
-    handleSubmit() {
-      this.$emit('save', { ...this.form });
-    },
-    incrementQuantity() {
-      this.form.quantity++;
-    },
-    decrementQuantity() {
-      if (this.form.quantity > 1) {
-        this.form.quantity--;
+    });
+
+    const handleSubmit = async () => {
+      try {
+        const response = await fetch('/api/partsentries', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(form.value)
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log('Entry successfully added:', data);
+
+        form.value = { // Reset form after submission
+          productnumber: '',
+          productName: '',
+          quantity: 1,
+          supplier: '',
+          date: new Date().toISOString().split('T')[0]
+        };
+
+        // Optionally close the modal
+        // $emit('close');
+      } catch (error) {
+        console.error('Error adding entry:', error);
       }
-    },
-    openScanner() {
-      console.log("Opening scanner...");
-      this.showScanner = true;
-      console.log("showScanner:", this.showScanner);
-    },
-    handleScanned(decodedText) {
-      this.form.productnumber = decodedText;
-      this.fetchPartDescription();
-      this.showScanner = false;
-    },
-    fetchPartDescription() {
-      const partsStore = usePartsStore();
-      const part = partsStore.parts.find(part => part.partnumber === this.form.productnumber);
-      if (part) {
-        this.form.productName = part.description;
-      } else {
-        console.warn("Part not found for number:", this.form.productnumber);
-      }
-    }
+    };
+
+    return {
+      form,
+      fullName,
+      handleSubmit
+    };
   }
 }
-</script> 
+</script>

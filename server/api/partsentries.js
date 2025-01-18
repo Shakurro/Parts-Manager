@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default defineEventHandler(async (event) => {
   const jwtToken = getCookie(event, 'jwtToken'); // Cookie JWT-Token abrufen
-  const baseURL = 'http://212.132.77.32:1337/partsentries';
+  const baseURL = 'https://backend.jzetzmann.com/partsentries';
 
   try {
     const response = await axios.get(baseURL, {

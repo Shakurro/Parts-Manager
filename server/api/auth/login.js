@@ -4,21 +4,24 @@ export default defineEventHandler(async (event) => {
   const { username, password } = await readBody(event);
 
   try {
-    const response = await axios.post('http://212.132.77.32:1337/auth/local', {
+    const response = await axios.post('https://backend.jzetzmann.com/auth/local', {
       identifier: username,
       password: password,
     });
 
     if (response.data.jwt) {
-      // Erfolgreicher Login, JWT-Token zurückgeben
       const jwt = response.data.jwt;
 
       return { jwt };
     } else {
-      throw new Error('Login failed');
+      throw new Error('Login failed: JWT not found');
     }
   } catch (error) {
-    // Fehler zurückgeben, damit die Komponente eine Meldung anzeigen kann
-    throw createError({ statusCode: 401, message: 'Invalid credentials' });
+    console.error('Login Error:', error.response?.data || error.message); // Fehlerdetails loggen
+
+    throw createError({
+      statusCode: error.response?.status || 401,
+      message: error.response?.data?.message || 'Invalid credentials',
+    });
   }
 });

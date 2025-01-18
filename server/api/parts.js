@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   const method = event.node.req.method;
 
   // Base URL der externen API
-  const baseURL = 'http://212.132.77.32:1337/items';
+  const baseURL = 'https://backend.jzetzmann.com/items';
 
   if (method === 'GET') {
     try {
