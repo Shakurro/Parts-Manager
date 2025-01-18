@@ -69,7 +69,7 @@
         <NuxtLink
           v-if="userStore.isManager()"
           id="container3"
-          to="/store/output"
+          to="/store/exit"
           class="w-full max-w-sm bg-white hover:bg-red-50 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
         >
           <div class="p-3 bg-red-100 rounded-full">
