@@ -37,48 +37,57 @@
             </div>
             <div class="min-w-[200px]">
               <select 
-                v-model="filters.price"
-                class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none"
-              >
-                <option value="">Alle Preise</option>
-                <option v-for="price in priceOptions" :key="price" :value="price">
-                  Bis {{ price }}€
-                </option>
-              </select>
-            </div>
-            <div class="min-w-[200px]">
-              <select 
                 v-model="filters.quantity"
                 class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-600 focus:border-gray-600 outline-none"
               >
-                <option value="">Alle Mengen</option>
                 <option v-for="quantity in quantityOptions" :key="quantity" :value="quantity">
-                  Bis {{ quantity }}
+                  {{ quantity === '1-4' ? 'Standard: ' + quantity : quantity }}
                 </option>
               </select>
             </div>
           </div>
         </div>
 
-        <div v-if="filteredParts.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="part in filteredParts" :key="part.id" class="bg-white rounded-lg shadow-md p-4">
-            <h2 class="text-lg font-semibold text-gray-700">{{ part.name }}</h2>
-            <p class="text-gray-600">Quantity: {{ part.quantity }}</p>
-            <p class="text-gray-600">Price: {{ part.price }}</p>
+        <n-scrollbar style="max-height: 800px">
+          <div class="bg-white rounded-lg shadow-sm">
+            <table class="min-w-full table-auto">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-200">
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Artikelnummer</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Beschreibung</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Menge</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Reihe</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Regal</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Fach</th>
+                  <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">Kategorie</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="part in filteredParts" :key="part.id" class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 text-sm">{{ part.partnumber }}</td>
+                  <td class="px-6 py-4 text-sm">{{ truncateDescription(part.description) }}</td>
+                  <td class="px-6 py-4 text-sm">
+                    <span :class="getQuantityClass(part.instock)" class="px-3 py-1 text-white rounded-full">{{ part.instock }} Stk.</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm">{{ part.reihe }}</td>
+                  <td class="px-6 py-4 text-sm">{{ part.regal }}</td>
+                  <td class="px-6 py-4 text-sm">{{ part.fach }}</td>
+                  <td class="px-6 py-4 text-sm">{{ getCategoryName(part.category) }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-        <div v-else class="text-center text-gray-600">
-          <p>No parts with low quantity found.</p>
-        </div>
+        </n-scrollbar>
       </div>
     </div>
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue';
-  import { usePartsStore } from '~/stores/partsStore'; // Importiere den partsStore
+  import { ref, computed, onMounted } from 'vue';
+  import { usePartsStore } from '~/stores/partsStore';
   
   const partsStore = usePartsStore();
+  
   const searchQuery = ref('');
   const filterCriteria = ref('quantity');
   
@@ -86,8 +95,7 @@
   const filters = ref({
     search: '',
     category: '',
-    price: '',
-    quantity: ''
+    quantity: '1-4' // Default to 1-4
   });
   
   // Categories data
@@ -103,33 +111,60 @@
     { id: 9, name: 'Ladeboardwand' }
   ]);
   
-  // Price and quantity options
-  const priceOptions = [50, 100, 150, 200, 250, 300];
-  const quantityOptions = [1, 2, 3, 4, 5, 6, 7, 8];
+  // Quantity options
+  const quantityOptions = ['1-4', '1-2', '2-4', '5-6'];
   
   // Computed properties for filtered items
   const filteredParts = computed(() => {
+    const [min, max] = filters.value.quantity.split('-').map(Number);
     return partsStore.parts.filter(part => {
       const searchMatch = !filters.value.search || 
-        part.name.toLowerCase().includes(filters.value.search.toLowerCase());
+        part.partnumber.toLowerCase().includes(filters.value.search.toLowerCase()) ||
+        part.description.toLowerCase().includes(filters.value.search.toLowerCase());
 
       const categoryMatch = !filters.value.category || 
         part.category === filters.value.category;
 
-      const priceMatch = !filters.value.price || 
-        part.price <= filters.value.price;
+      const quantityMatch = part.instock >= min && part.instock <= max;
 
-      const quantityMatch = !filters.value.quantity || 
-        part.quantity <= filters.value.quantity;
-
-      return searchMatch && categoryMatch && priceMatch && quantityMatch;
+      return searchMatch && categoryMatch && quantityMatch;
     });
   });
+  
+  // Helper function to get category name
+  function getCategoryName(categoryId) {
+    const category = categories.value.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Unbekannt';
+  }
+  
+  // Helper function to truncate description
+  function truncateDescription(description) {
+    if (description.length > 20) {
+      return description.substring(0, 20) + '...';
+    }
+    return description;
+  }
+  
+  // Helper function to get quantity class
+  function getQuantityClass(instock) {
+    if (instock <= 2) {
+      return 'bg-red-500';
+    } else if (instock <= 4) {
+      return 'bg-orange-500';
+    } else {
+      return 'bg-green-500';
+    }
+  }
   
   // Method to reset date filters
   function resetDateFilters() {
     // This function is no longer needed, but kept for potential future use
   }
+  
+  onMounted(() => {
+    partsStore.fetchAllItems();
+  });
+  
   </script>
   
   <style scoped>
