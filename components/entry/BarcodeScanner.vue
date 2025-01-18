@@ -3,8 +3,8 @@
     <div class="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4">
       <div class="p-6">
         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Barcode Scannen</h3>
-        <div id="scanner" style="width: 100%;"></div>
-        <button @click="$emit('close')" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors duration-200">
+        <div id="scanner" style="width: 100%; height: 300px;"></div>
+        <button @click="stopScanner" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors duration-200">
           Abbrechen
         </button>
       </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { Html5Qrcode } from "html5-qrcode";
+import Quagga from 'quagga';
 
 export default {
   mounted() {
@@ -21,32 +21,33 @@ export default {
   },
   methods: {
     startScanner() {
-      this.html5QrCode = new Html5Qrcode("scanner");
-      this.html5QrCode.start(
-        { facingMode: { exact: "environment" } },
-        {
-          fps: 10,
-          qrbox: 250
+      Quagga.init({
+        inputStream: {
+          type: "LiveStream",
+          target: document.querySelector('#scanner'),
+          constraints: {
+            facingMode: "environment" // or user for front camera
+          }
         },
-        (decodedText, decodedResult) => {
-          this.$emit('scanned', decodedText);
-          this.stopScanner();
-        },
-        (errorMessage) => {
-          console.error("Error during scanning:", errorMessage);
+        decoder: {
+          readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"]
         }
-      ).catch((err) => {
-        console.error("Unable to start scanning on mobile:", err);
+      }, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        Quagga.start();
+      });
+
+      Quagga.onDetected((data) => {
+        this.$emit('scanned', data.codeResult.code);
+        this.stopScanner();
       });
     },
     stopScanner() {
-      if (this.html5QrCode) {
-        this.html5QrCode.stop().then(() => {
-          this.$emit('close');
-        }).catch((err) => {
-          console.error("Unable to stop scanning.", err);
-        });
-      }
+      Quagga.stop();
+      this.$emit('close');
     }
   }
 }
