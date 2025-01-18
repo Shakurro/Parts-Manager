@@ -80,21 +80,7 @@
           <h2 class="text-xl font-semibold text-gray-700">Warenausgang</h2>
         </NuxtLink>
 
-        <!-- Bestellungen - Nur für Admin -->
-        <NuxtLink
-          v-if="userStore.isAdmin()"
-          id="container4"
-          to="/store/orders"
-          class="w-full max-w-sm bg-white hover:bg-purple-50 rounded-xl shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl p-6 flex flex-col items-center justify-center space-y-4"
-        >
-          <div class="p-3 bg-purple-100 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-          </div>
-          <h2 class="text-xl font-semibold text-gray-700">Bestellungen</h2>
-        </NuxtLink>
-
+       
         <!-- Low Quantity Parts - Nur für Manager und Admin --> 
         <NuxtLink
           v-if="userStore.isManager() || userStore.isAdmin()"
