@@ -3,7 +3,7 @@
     <div class="relative bg-white rounded-lg shadow-lg max-w-lg w-full mx-4">
       <div class="p-6">
         <h3 class="text-2xl font-semibold text-gray-800 mb-4">Barcode Scannen</h3>
-        <div id="scanner" style="width: 100%; height: 300px;"></div>
+        <video id="video" style="width: 100%; height: 300px;"></video>
         <button @click="stopScanner" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition-colors duration-200">
           Abbrechen
         </button>
@@ -13,42 +13,49 @@
 </template>
 
 <script>
-import Quagga from 'quagga';
+import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
 
 export default {
+  data() {
+    return {
+      isScanning: false, // Statusvariable für den Scanner
+    };
+  },
   mounted() {
     this.startScanner();
   },
   methods: {
-    startScanner() {
-      Quagga.init({
-        inputStream: {
-          type: "LiveStream",
-          target: document.querySelector('#scanner'),
-          constraints: {
-            facingMode: "environment" // or user for front camera
-          }
-        },
-        decoder: {
-          readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader"]
-        }
-      }, (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        Quagga.start();
-      });
+    async startScanner() {
+      if (this.isScanning) return; // Verhindere mehrfaches Starten des Scanners
+      this.isScanning = true; // Setze den Status auf "scanning"
 
-      Quagga.onDetected((data) => {
-        this.$emit('scanned', data.codeResult.code);
-        this.stopScanner();
-      });
+      const codeReader = new BrowserMultiFormatReader();
+      try {
+        const videoInputDevices = await codeReader.getVideoInputDevices();
+        const selectedDeviceId = videoInputDevices[0].deviceId; // Wähle die erste Kamera aus
+
+        await codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+          if (result) {
+            this.$emit('scanned', result.text);
+            this.stopScanner();
+          }
+          if (err && !(err instanceof NotFoundException)) {
+            console.error(err);
+          }
+        });
+      } catch (error) {
+        console.error('Error starting scanner:', error);
+        this.isScanning = false; // Setze den Status zurück, wenn ein Fehler auftritt
+      }
     },
     stopScanner() {
-      Quagga.stop();
+      this.isScanning = false; // Setze den Status zurück
       this.$emit('close');
     }
   }
 }
-</script> 
+</script>
+
+<style scoped>
+/* Füge hier deine Styles hinzu, falls nötig */
+</style> 

@@ -33,31 +33,9 @@
                 v-model="form.productName"
                 type="text"
                 required
+                readonly
                 class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-600">Menge</label>
-              <div class="flex items-center mt-2">
-                <button
-                  type="button"
-                  @click="decrementQuantity"
-                  class="px-2 py-1 bg-gray-200 rounded-l-md text-gray-700 hover:bg-gray-300"
-                >-</button>
-                <input
-                  v-model.number="form.quantity"
-                  type="number"
-                  min="1"
-                  required
-                  class="w-16 text-center border-t border-b border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                />
-                <button
-                  type="button"
-                  @click="incrementQuantity"
-                  class="px-2 py-1 bg-gray-200 rounded-r-md text-gray-700 hover:bg-gray-300"
-                >+</button>
-              </div>
             </div>
 
             <div>
@@ -75,6 +53,38 @@
                 <option value="Würth">Würth</option>
                 <option value="Saxas">Saxas</option>
               </select>
+            </div>
+
+            <div class="mt-4">
+              <label class="block text-sm font-medium text-gray-600">Menge</label>
+              <div class="flex items-center">
+                <button 
+                  type="button"
+                  @click="decrementQuantity" 
+                  :disabled="isSaveButtonDisabled || form.quantity <= 1"
+                  :class="{'bg-gray-400 cursor-not-allowed': isSaveButtonDisabled || form.quantity <= 1, 'bg-gray-800 text-white hover:bg-gray-700': !(isSaveButtonDisabled || form.quantity <= 1)}"
+                  class="w-8 h-8 flex items-center justify-center rounded-full transition-colors duration-200"
+                >
+                  -
+                </button>
+                <input
+                  v-model.number="form.quantity"
+                  type="number"
+                  min="1"
+                  required
+                  :disabled="isSaveButtonDisabled"
+                  class="w-16 text-center border-t border-b border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                />
+                <button 
+                  type="button"
+                  @click="incrementQuantity" 
+                  :disabled="isSaveButtonDisabled"
+                  :class="{'bg-gray-400 cursor-not-allowed': isSaveButtonDisabled, 'bg-gray-800 text-white hover:bg-gray-700': !isSaveButtonDisabled}"
+                  class="w-8 h-8 flex items-center justify-center rounded-full transition-colors duration-200"
+                >
+                  +
+                </button>
+              </div>
             </div>
 
             <div>
@@ -103,7 +113,9 @@
             </button>
             <button
               type="submit"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors duration-200"
+              :disabled="isSaveButtonDisabled"
+              :class="{'bg-gray-400 cursor-not-allowed': isSaveButtonDisabled, 'bg-gray-800 hover:bg-green-600': !isSaveButtonDisabled}"
+              class="px-4 py-2 text-white rounded-md transition-colors duration-200"
             >
               Speichern
             </button>
@@ -111,14 +123,25 @@
         </form>
       </div>
     </div>
+
+    <BarcodeScanner 
+      v-if="isScannerOpen" 
+      @scanned="handleScanned" 
+      @close="isScannerOpen = false" 
+    />
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { userStore } from '@/stores/userStore';
+import BarcodeScanner from '~/components/entry/BarcodeScanner.vue';
+import { usePartsStore } from '@/stores/partsStore';
 
 export default {
+  components: {
+    BarcodeScanner
+  },
   setup() {
     const form = ref({
       productnumber: '',
@@ -132,6 +155,8 @@ export default {
       const { first_name, second_name } = userStore.userData || {};
       return `${first_name || ''} ${second_name || ''}`.trim();
     });
+
+    const isScannerOpen = ref(false);
 
     const handleSubmit = async () => {
       try {
@@ -165,11 +190,71 @@ export default {
       }
     };
 
+    const openScanner = () => {
+      isScannerOpen.value = true;
+    };
+
+    const handleScanned = (barcode) => {
+      console.log('Scanned Barcode:', barcode);
+      form.value.productnumber = barcode;
+      fetchPartDescription();
+      isScannerOpen.value = false;
+    };
+
+    const fetchPartDescription = async () => {
+      const partsStore = usePartsStore();
+      const partNumber = form.value.productnumber;
+
+      if (partNumber) {
+        const part = partsStore.parts.find(item => item.partnumber === partNumber);
+        if (part) {
+          form.value.productName = part.description;
+        } else {
+          form.value.productName = 'Unbekannt';
+        }
+      }
+    };
+
+    const fetchPartsEntries = async () => {
+      const partsStore = usePartsStore();
+      await partsStore.fetchAllItems();
+    };
+
+    const isSaveButtonDisabled = computed(() => {
+      return !form.value.productName || form.value.productName === 'Unbekannt' || form.value.supplier === '';
+    });
+
+    const incrementQuantity = () => {
+      form.value.quantity += 1;
+    };
+
+    const decrementQuantity = () => {
+      if (form.value.quantity > 1) {
+        form.value.quantity -= 1;
+      }
+    };
+
+    onMounted(() => {
+      fetchPartsEntries();
+      fetchPartDescription();
+    });
+
     return {
       form,
       fullName,
-      handleSubmit
+      handleSubmit,
+      isScannerOpen,
+      openScanner,
+      handleScanned,
+      fetchPartDescription,
+      isSaveButtonDisabled,
+      incrementQuantity,
+      decrementQuantity
     };
   }
 }
 </script>
+
+<style scoped>
+/* Füge hier deine Styles hinzu, falls nötig */
+</style>

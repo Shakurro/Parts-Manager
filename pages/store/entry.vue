@@ -112,10 +112,12 @@
 <script>
 import { usePartsEntriesStore } from '~/stores/partsentriesStore';
 import NewEntryModal from '~/components/entry/NewEntryModal.vue';
+import BarcodeScanner from '~/components/entry/BarcodeScanner.vue';
 
 export default {
   components: {
-    NewEntryModal
+    NewEntryModal,
+    BarcodeScanner
   },
   setup() {
     const partsEntriesStore = usePartsEntriesStore();
