@@ -43,9 +43,12 @@
               class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
             >
               <option value="">Alle Lieferanten</option>
-              <option v-for="supplier in uniqueSuppliers" :key="supplier" :value="supplier">
-                {{ supplier }}
-              </option>
+              <option value="Europart">Europart</option>
+              <option value="Krone">Krone</option>
+              <option value="Schmitz">Schmitz</option>
+              <option value="Winkler">Winkler</option>
+              <option value="Würth">Würth</option>
+              <option value="Saxas">Saxas</option>
             </select>
           </div>
           <div class="flex gap-2 min-w-[400px]">
@@ -113,43 +116,50 @@
 import { usePartsEntriesStore } from '~/stores/partsentriesStore';
 import NewEntryModal from '~/components/entry/NewEntryModal.vue';
 import BarcodeScanner from '~/components/entry/BarcodeScanner.vue';
+import { ref, onMounted } from 'vue';
 
 export default {
   components: {
     NewEntryModal,
     BarcodeScanner
   },
+  created() {
+    this.loadEntries();
+  },
   setup() {
     const partsEntriesStore = usePartsEntriesStore();
+    const partsEntries = ref([]);
+    const showNewEntryModal = ref(false);
 
     const loadEntries = async () => {
       try {
         await partsEntriesStore.fetchAllEntries();
+        partsEntries.value = partsEntriesStore.partsEntries;
       } catch (error) {
+        // Fehlerbehandlung hier hinzufügen, falls nötig
       }
     };
 
-    // Lade die Einträge beim Setup
-    loadEntries();
-
-    return {
-      partsEntries: partsEntriesStore.partsEntries,
-    };
-  },
-  data() {
+    onMounted(() => {
+      loadEntries();
+    });
 
     const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
     const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
+    const filters = ref({
+      search: '',
+      supplier: '',
+      dateFrom: oneMonthAgo.toISOString().split('T')[0],
+      dateTo: lastDayOfMonth.toISOString().split('T')[0]
+    });
+
     return {
-      showNewEntryModal: false,
-      filters: {
-        search: '',
-        supplier: '',
-        dateFrom: firstDayOfMonth.toISOString().split('T')[0],
-        dateTo: lastDayOfMonth.toISOString().split('T')[0]
-      }
+      partsEntries,
+      loadEntries,
+      showNewEntryModal,
+      filters
     };
   },
   computed: {
@@ -158,15 +168,14 @@ export default {
     },
     filteredItems() {
       return this.partsEntries.filter(item => {
-
         const searchMatch = !this.filters.search || 
-          item.description.toLowerCase().includes(this.filters.search.toLowerCase()) ||
-          item.partnumber?.toLowerCase().includes(this.filters.search.toLowerCase());
+          (item.description && item.description.toLowerCase().includes(this.filters.search.toLowerCase())) ||
+          (item.partnumber && item.partnumber.toLowerCase().includes(this.filters.search.toLowerCase()));
 
         const supplierMatch = !this.filters.supplier || 
           item.vendor === this.filters.supplier;
 
-        const itemDate = new Date(item.importdate);
+        const itemDate = new Date(item.published_at);
         const dateFromMatch = !this.filters.dateFrom || 
           itemDate >= new Date(this.filters.dateFrom);
         const dateToMatch = !this.filters.dateTo || 
@@ -178,13 +187,13 @@ export default {
   },
   watch: {
     'filters.search': function(newVal) {
-      const matchingPart = this.partsEntries.find(item => item.partnumber === newVal);
-      if (matchingPart) {
-
-        this.filters.description = matchingPart.description;
-      } else {
-        this.filters.description = '';
-      }
+      // Logik für die Suche
+    },
+    'filters.dateFrom': function(newVal) {
+      // Logik für das Startdatum
+    },
+    'filters.dateTo': function(newVal) {
+      // Logik für das Enddatum
     }
   },
   methods: {
@@ -200,7 +209,6 @@ export default {
       });
     },
     handleNewEntry(newEntry) {
-
       const newId = Math.max(...this.partsEntries.map(item => item.id)) + 1;
       this.partsEntries.unshift({
         id: newId,
@@ -208,13 +216,12 @@ export default {
       });
       this.showNewEntryModal = false;
     },
-
     resetDateFilters() {
       const today = new Date();
-      const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
       const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
       
-      this.filters.dateFrom = firstDayOfMonth.toISOString().split('T')[0];
+      this.filters.dateFrom = oneMonthAgo.toISOString().split('T')[0];
       this.filters.dateTo = lastDayOfMonth.toISOString().split('T')[0];
     }
   }
