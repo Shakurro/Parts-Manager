@@ -93,7 +93,7 @@
               <td class="px-6 py-4 text-sm">{{ item.partnumber }}</td>
               <td class="px-6 py-4 text-sm">{{ item.description }}</td>
               <td class="px-6 py-4 text-sm">
-                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">{{ item.value }} Stk.</span>
+                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">{{ item.quantity}} Stk.</span>
               </td>
               <td class="px-6 py-4 text-sm">{{ item.vendor }}</td>
               <td class="px-6 py-4 text-sm">{{ item.manager }}</td>

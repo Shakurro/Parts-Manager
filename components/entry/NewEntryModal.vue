@@ -16,7 +16,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-600">Artikelnummer</label>
               <input
-                v-model="form.productnumber"
+                v-model="form.partnumber"
                 @blur="fetchPartDescription"
                 type="text"
                 required
@@ -30,7 +30,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-600">Artikelname</label>
               <input
-                v-model="form.productName"
+                v-model="form.description"
                 type="text"
                 required
                 readonly
@@ -41,7 +41,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-600">Lieferant</label>
               <select
-                v-model="form.supplier"
+                v-model="form.vendor"
                 required
                 class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               >
@@ -144,10 +144,11 @@ export default {
   },
   setup() {
     const form = ref({
-      productnumber: '',
-      productName: '',
+      partnumber: '',
+      description: '',
+      vendor: '',
+      manager: '',
       quantity: 1,
-      supplier: '',
       date: new Date().toISOString().split('T')[0]
     });
 
@@ -160,27 +161,41 @@ export default {
 
     const handleSubmit = async () => {
       try {
+        const payload = {
+          partnumber: form.value.partnumber || null,
+          description: form.value.description || "",
+          vendor: form.value.vendor || "",
+          importdate: form.value.importdate || "",
+          manager: form.value.manager || "",
+          quantity: form.value.quantity || null,
+          item: form.value.item || null
+        };
+
+        console.log('Sending data:', payload);
+
         const response = await fetch('/api/partsentries', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(form.value)
+          body: JSON.stringify(payload)
         });
+
+        const data = await response.json();
+        console.log('Server response:', data);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
 
-        const data = await response.json();
         console.log('Entry successfully added:', data);
 
-        form.value = { // Reset form after submission
-          productnumber: '',
-          productName: '',
-          quantity: 1,
-          supplier: '',
-          date: new Date().toISOString().split('T')[0]
+        form.value = {
+          partnumber: '',
+          description: '',
+          vendor: '',
+          manager: fullName,
+          quantity: 1
         };
 
         // Optionally close the modal
@@ -196,21 +211,21 @@ export default {
 
     const handleScanned = (barcode) => {
       console.log('Scanned Barcode:', barcode);
-      form.value.productnumber = barcode;
+      form.value.partnumber = barcode;
       fetchPartDescription();
       isScannerOpen.value = false;
     };
 
     const fetchPartDescription = async () => {
       const partsStore = usePartsStore();
-      const partNumber = form.value.productnumber;
+      const partNumber = form.value.partnumber;
 
       if (partNumber) {
         const part = partsStore.parts.find(item => item.partnumber === partNumber);
         if (part) {
-          form.value.productName = part.description;
+          form.value.description = part.description;
         } else {
-          form.value.productName = 'Unbekannt';
+          form.value.description = 'Unbekannt';
         }
       }
     };
@@ -221,7 +236,7 @@ export default {
     };
 
     const isSaveButtonDisabled = computed(() => {
-      return !form.value.productName || form.value.productName === 'Unbekannt' || form.value.supplier === '';
+      return !form.value.description || form.value.description === 'Unbekannt' || form.value.vendor === '';
     });
 
     const incrementQuantity = () => {
