@@ -44,7 +44,7 @@
 
       <!-- Mittlerer Container: Alle Teile im Lager -->
       <div class="bg-white shadow-lg rounded-lg p-6 h-full container-height">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Teile im Lager</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Ersatzteile im Lager</h2>
         <PartsList 
           :parts="allParts" 
           @add-part-to-partpack="handleAddPartToPartpack" 
@@ -54,7 +54,7 @@
 
       <!-- Rechter Container: Teile im Partpack -->
       <div class="bg-white shadow-lg rounded-lg p-6 h-full container-height">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Items im Partpack</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Ersatzteile im Partpack</h2>
         <ul v-if="partpack?.items && partpack.items.length > 0" class="space-y-2">
           <li v-for="item in partpack.items" :key="item.id" class="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-gray-100 transition">
             <div class="flex flex-col">
@@ -67,7 +67,7 @@
             </div>
           </li>
         </ul>
-        <p v-else class="text-gray-600">Keine Items in diesem Partpack vorhanden.</p>
+        <p v-else class="text-gray-600">Keine Ersatzteile in diesem Partpack vorhanden.</p>
       </div>
     </div>
   </div>

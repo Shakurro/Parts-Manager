@@ -77,9 +77,9 @@ export default {
       <table class="min-w-full border-collapse border border-gray-200">
         <thead>
           <tr class="bg-gray-800 text-white">
-            <th class="border border-gray-300 p-2">Part Number</th>
-            <th class="border border-gray-300 p-2">Description</th>
-            <th class="border border-gray-300 p-2">Quantity</th>
+            <th class="border border-gray-300 p-2">Ersatzteil-Nr.</th>
+            <th class="border border-gray-300 p-2">Beschreibung</th>
+            <th class="border border-gray-300 p-2">Menge</th>
             <th class="border border-gray-300 p-2" style="width: 120px;"></th>
           </tr>
         </thead>
@@ -88,17 +88,25 @@ export default {
             <td class="border border-gray-300 p-2">{{ part.partnumber }}</td>
             <td class="border border-gray-300 p-2">{{ truncateDescription(part.description) }}</td>
             <td class="border border-gray-300 p-2 flex items-center">
-              <button @click="decreaseQuantity(part)" class="bg-gray-300 text-black px-2 py-1 rounded-l">-</button>
+              <button 
+                @click="decreaseQuantity(part)" 
+                class="bg-gray-800 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-full transition duration-300">
+                -
+              </button>
               <input
                 type="number"
                 v-model.number="part.quantity"
                 min="0"
                 placeholder="0"
-                class="border border-gray-300 p-1 w-16 text-center"
+                class="border border-gray-300 p-1 w-12 text-center mx-2 no-arrows"
                 :class="{'border-red-500': part.quantity > 0 && !isQuantityValid(part)}"
                 @input="checkQuantity(part)"
               />
-              <button @click="increaseQuantity(part)" class="bg-gray-300 text-black px-2 py-1 rounded-r">+</button>
+              <button 
+                @click="increaseQuantity(part)" 
+                class="bg-gray-800 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded-full transition duration-300">
+                +
+              </button>
             </td>
             <td class="border border-gray-300 p-2">
               <button 
@@ -123,5 +131,12 @@ table {
 }
 th, td {
   text-align: left;
+}
+
+/* Remove arrows from number input */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 </style>
