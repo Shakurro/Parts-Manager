@@ -146,7 +146,7 @@
             <div class="space-y-3">
               <div class="bg-green-50 p-4 rounded-lg">
                 <div class="flex justify-between items-center mb-1">
-                  <span class="font-medium">Standardpreis</span>
+                  <span class="font-medium">Listenpreis</span>
                   <div v-if="isEditing">
                     <input 
                       v-model.number="editedPart.price" 
@@ -159,30 +159,41 @@
                   <span v-else class="text-lg font-semibold text-green-800">{{ part.selling_price_eur}}€</span>
                 </div>
               </div>
-              <div class="bg-blue-50 p-4 rounded-lg">
-                <div class="flex justify-between items-center mb-1">
-                  <div class="flex items-center">
-                    <span class="font-medium">Großkundenpreis</span>
-                    <span class="text-sm text-gray-500 ml-2">(10% Rabatt)</span>
+
+              <!-- Vereinbarungen Section with Infinite Scroll -->
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="text-md font-semibold mb-4">Preise nach Vereinbarungen</h4>
+                
+                <!-- Search Field for Agreements -->
+                <input 
+                  v-model="searchQuery" 
+                  type="text" 
+                  placeholder="Suche nach Vereinbarung" 
+                  class="mb-4 p-2 border rounded w-full"
+                />
+
+                <n-infinite-scroll style="height: 240px" :distance="10" @load="handleLoad">
+                  <div 
+                    v-for="agreement in filteredAgreements" 
+                    :key="agreement.name" 
+                    class="flex items-center justify-between p-4 mb-4 bg-white rounded-lg border border-gray-300 transition-all duration-200 ease-in-out hover:bg-gray-100 hover:shadow-lg"
+                  >
+                    <div class="flex flex-col">
+                      <span class="font-semibold text-lg text-gray-800">{{ agreement.name }}</span>
+                      <span class="text-sm text-gray-500">Rabatt: {{ agreement.discount }}%</span>
+                    </div>
+                    <span class="text-xl font-bold" :class="agreement.color">{{ agreement.price }}€</span>
                   </div>
-                  <span class="text-lg font-semibold text-blue-800">{{ (part.selling_price_eur * 0.9).toFixed(2) }}€</span>
-                </div>
+                </n-infinite-scroll>
               </div>
-              <div class="bg-purple-50 p-4 rounded-lg">
-                <div class="flex justify-between items-center mb-1">
-                  <div class="flex items-center">
-                    <span class="font-medium">Händlerpreis</span>
-                    <span class="text-sm text-gray-500 ml-2">(15% Rabatt)</span>
-                  </div>
-                  <span class="text-lg font-semibold text-purple-800">{{ (part.selling_price_eur * 0.85).toFixed(2) }}€</span>
-                </div>
-              </div>
+
+              
             </div>
           </div>
 
           <!-- Einkaufspreise -->
           <div class="mt-6">
-            <h3 class="text-lg font-semibold mb-3">Einkaufspreise</h3>
+            <h3 class="text-lg font-semibold mb-3">Einkaufspreise der Lieferanten</h3>
             <div class="space-y-3">
               <div 
                 v-for="(supplier, index) in editedSuppliers" 
@@ -232,7 +243,6 @@
                       Entfernen
                     </button>
                   </div>
-                  <span v-else>Letzte Bestellung: {{ supplier.lastOrder }}</span>
                   <button 
                     @click="togglePreferredSupplier(supplier.id)"
                     class="text-blue-600 hover:text-blue-800"
@@ -345,11 +355,6 @@ const saveChanges = async () => {
   }
 }
 
-const cancelEditing = () => {
-  isEditing.value = false
-  editedPart.value = { ...part.value }
-}
-
 function addNewSupplier() {
   editedSuppliers.value.push({
     id: Date.now(), // Temporäre ID
@@ -365,10 +370,100 @@ function removeSupplier(index) {
 }
 
 function togglePreferredSupplier(supplierId) {
-  const supplier = editedSuppliers.value.find(s => s.id === supplierId)
+  // Set all suppliers to not preferred
+  editedSuppliers.value.forEach(s => s.preferred = false);
+
+  // Find the selected supplier and set it as preferred
+  const supplier = editedSuppliers.value.find(s => s.id === supplierId);
   if (supplier) {
-    supplier.preferred = !supplier.preferred
+    supplier.preferred = true;
   }
 }
 
+const count = ref(6)
+const handleLoad = () => {
+  count.value += 1
+}
+
+const agreements = computed(() => [
+  {
+    name: 'LKW Walter',
+    discount: 25,
+    price: (part.selling_price_eur * 0.75).toFixed(2),
+    color: 'text-blue-600'
+  },
+  {
+    name: 'Deutschepost',
+    discount: 15,
+    price: (part.selling_price_eur * 0.85).toFixed(2),
+    color: 'text-purple-600'
+  },
+  {
+    name: 'Gras',
+    discount: 10,
+    price: (part.selling_price_eur * 0.90).toFixed(2),
+    color: 'text-green-600'
+  },
+  {
+    name: 'Imperial',
+    discount: 20,
+    price: (part.selling_price_eur * 0.80).toFixed(2),
+    color: 'text-red-600'
+  },
+  {
+    name: 'Paneuropa',
+    discount: 5,
+    price: (part.selling_price_eur * 0.95).toFixed(2),
+    color: 'text-yellow-600'
+  }
+])
+
+const searchQuery = ref('')
+
+const filteredAgreements = computed(() => {
+  if (!searchQuery.value) {
+    return agreements.value
+  }
+  return agreements.value.filter(agreement =>
+    agreement.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
 </script>
+
+<style scoped>
+.item {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  background-color: rgba(0, 128, 0, 0.16);
+  padding: 0 10px;
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.agreement-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid gray.300;
+  transition: all 0.2s ease-in-out;
+}
+
+.agreement-card:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+</style>
