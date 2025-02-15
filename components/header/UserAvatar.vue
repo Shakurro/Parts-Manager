@@ -15,12 +15,13 @@
 
 <script>
 import { userStore } from '@/stores/userStore'; // Korrigierter Importpfad
+import userAvatar from '@/assets/images/icon.png'; // Importiere das lokale Bild
 
 export default {
   data() {
     return {
       menuOpen: false,
-      avatarUrl: 'https://loremflickr.com/150/150', // UserBild
+      avatarUrl: userAvatar, // Verwende das importierte Bild
       branch: '0525' // wird später über Datenbank bezogen
     };
   },
