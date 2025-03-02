@@ -70,7 +70,7 @@ export default {
 
           this.router.push('/store');
         } else {
-          this.errorMessage = 'Login failed. Please check your credentials.';
+          this.errorMessage = 'Falscher Benutzername oder falsches Passwort.';
         }
       } catch (error) {
         console.error('Error during login:', error);

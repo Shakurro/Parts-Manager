@@ -13,3 +13,5 @@ export async function fetchUserData(jwt) {
     throw error;
   }
 }
+
+// Muss noch auf SSL geändert werden!!

@@ -87,31 +87,17 @@
       </div>
     </main>
 
-    <NotificationPopup 
-      :visible="isNotificationVisible" 
-      @close="closeNotification"
-    />
-
-    <AddPartPopup 
-      :visible="isAddPopupVisible" 
-      @close="isAddPopupVisible = false" 
-      @add="addPart"
-    />
   </div>
 </template>
 
 <script setup>
 import { usePartsStore } from '@/stores/partsStore';
 import { onMounted, onUnmounted, computed, ref } from 'vue';
-import NotificationPopup from '../components/parts/NotificationPopup.vue';
-import AddPartPopup from '../components/parts/AddPartPopup.vue';
 import { useRouter } from 'vue-router';
 import CategoryName from '../components/parts/categorys.vue';
 
 const partsStore = usePartsStore();
 
-const isNotificationVisible = ref(false);
-const isAddPopupVisible = ref(false);
 const updateInterval = 30;
 const remainingTime = ref(updateInterval);
 
@@ -158,35 +144,6 @@ function clearFilters() {
   partsStore.updateSelectedCategories([]);
 }
 
-function updatePart(updatedPart) {
-  partsStore.updatePartInDatabase(updatedPart);
-}
-
-function closeNotification() {
-  isNotificationVisible.value = false;
-}
-
-function addPart(newPart) {
-  partsStore.addPart(newPart);
-  isAddPopupVisible.value = false;
-  isNotificationVisible.value = true;
-}
-
-function getCategoryName(categoryId) {
-  const categoryMap = {
-    1: 'Aufbau',
-    2: 'Rahmen',
-    3: 'Elektrik',
-    4: 'Motor',
-    5: 'Bremse',
-    6: 'Achse',
-    7: 'Betriebsstoffe',
-    8: 'Schrauben',
-    9: 'Ladeboardwand'
-  };
-  return categoryMap[categoryId] || 'fehlt';
-}
-
 function truncateDescription(description) {
   if (description.length > 20) {
     return description.substring(0, 20) + '...';
@@ -200,34 +157,6 @@ const formattedTime = computed(() => {
   return `${minutes}:${seconds}`;
 });
 
-function startBarcodeScanner() {
-  Quagga.init({
-    inputStream: {
-      type: "LiveStream",
-      target: document.querySelector('#interactive'),
-      constraints: {
-        width: 640,
-        height: 480,
-        facingMode: "environment" // Rückkamera
-      }
-    },
-    decoder: {
-      readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader"]
-    }
-  }, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    Quagga.start();
-  });
-
-  Quagga.onDetected((result) => {
-    const code = result.codeResult.code;
-    partsStore.value.searchQuery = code; // Setze den Barcode in die Suchleiste
-    Quagga.stop(); // Stoppe den Scanner nach erfolgreicher Erkennung
-  });
-}
 </script>
 
 <style scoped>
