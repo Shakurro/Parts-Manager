@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const { username, password } = await readBody(event);
 
   try {
-    const response = await axios.post('https://backend.jzetzmann.com/auth/local', {
+    const response = await axios.post('', {
       identifier: username,
       password: password,
     });
